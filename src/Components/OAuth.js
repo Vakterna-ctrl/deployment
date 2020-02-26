@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
+import { Dropbox } from "dropbox"
 
-class Register extends Component {
+    class OAuth extends Component {
+
+    
     render() {
         return (
             <div>
-                test
+                
             </div>
         )
     }
 }
 
-export default Register
+export default OAuth
