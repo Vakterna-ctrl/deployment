@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
-import { Link } from 'react-router-dom'
-
+import { Link } from 'react-router-dom';
 
 import '../Css/nav.css'
 
@@ -33,6 +32,9 @@ class Main extends Component {
           <header>
             <input placeholder="Search" type="text" />
             <button>Log out</button>
+            <Link to="/main">
+                <p>Return to Main page</p>
+            </Link>
           </header>
 
           <main>
@@ -67,36 +69,6 @@ class Main extends Component {
                         <td onClick={this.clickMe}>Folder name </td>
                     </tr>
                     <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td >Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
                     <td>Folder name </td>
                     </tr>
                     <tr>
@@ -105,39 +77,6 @@ class Main extends Component {
                     <tr>
                     <td>Folder name </td>
                     </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <Link to ="/edit-folder">
-                        <p>hej</p>
-                    </Link>
                 </tbody>
                 </table>
             </div>
