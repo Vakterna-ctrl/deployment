@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Dropbox } from "dropbox";
 
+import { Dropbox } from "dropbox";
 import { Link } from 'react-router-dom'
 
+import LogOut from './LogOut';
 
 import '../Css/nav.css'
 
@@ -43,7 +44,8 @@ class Main extends Component {
         <div className={"bigBox"}>
           <header>
             <input placeholder="Search" type="text" />
-            <button>Log out</button>
+            {/* <button>Log out</button> */}
+            <LogOut />
           </header>
 
           <main>
