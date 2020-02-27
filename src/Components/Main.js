@@ -36,6 +36,7 @@ class Main extends Component {
           </header>
 
           <main>
+          
           <div className="files">
                 <table>
                     <thead>
@@ -134,12 +135,17 @@ class Main extends Component {
                     </tr>
                     <tr>
                     <td>Folder name </td>
-                    </tr>
+                    <td>
                     <Link to ="/edit-folder">
                         <p>hej</p>
                     </Link>
+                    </td>
+                    </tr>
+                     
+                    
                 </tbody>
                 </table>
+                
             </div>
 
             <div className="sidebarRight">

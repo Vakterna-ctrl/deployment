@@ -24,20 +24,21 @@ main{
 .files{
     width: 75%;
     height: 100%;
-    background-color: #101010;
+    background-color: white;
     overflow-y: scroll;
     border-top: 1px solid #00ffa7;
+    
 }
 .sideLeft{
     width: 30%;
     height: 100%;
-    background-color: hotpink;
+    background-color: white;
 }
 .sidebarRight{
     width: 25%;
     height: 100%;
-    background-color: mediumblue;
-    border-top: 2px solid mediumblue;
+    background-color: white;
+    
     z-index: 2;
     margin-bottom: 10px;
 }
@@ -70,15 +71,37 @@ input {
 }
 
 td {
-    color: white;
-    border: 2px solid #00ffa7;
-    border-radius: 10px;
+    color: black;
+    
+    border-bottom: 5px double rgba(0,0,0,0.56);
     text-align: center; 
     font-style: italic;
     font-size: large;
     font-weight: 500;
+   
 }
 
 th {
-    color: white;
+    color: black;
 }
+
+tr{
+    margin-left: 100px;
+    border-collapse: collapse;
+}
+
+.files::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  .files::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 10px;
+  }
+  .files::-webkit-scrollbar-thumb {
+    background-color: #11171a;
+    border-radius: 10px;
+  }
+  
+
+
