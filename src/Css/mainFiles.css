@@ -12,11 +12,18 @@
 td {
     color: black;
     border-bottom: 5px double rgba(0,0,0,0.56);
-    text-align: center; 
+    
     font-style: italic;
     font-size: large;
     font-weight: 500;
+    width: 830px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
    
+}
+
+span{
+  margin-left: 20px;
 }
 
 td:hover{
@@ -25,12 +32,28 @@ td:hover{
 
 th {
     color: black;
+    font-size: 20px;
+    font-style: italic;
+    text-decoration: underline;
 }
 
 tr{
     margin-left: 100px;
     border-collapse: collapse;
 }
+
+table tr:nth-child(even){
+  background-color: #fcf5f5;
+  
+}
+
+table tr:hover {
+  background-color: #f0ebeb;
+}
+
+
+
+
 
 .files::-webkit-scrollbar {
     width: 5px;

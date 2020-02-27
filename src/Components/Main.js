@@ -65,76 +65,61 @@ class Main extends Component {
 
                   <tbody>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     <tr>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>test</td>
-                    </tr>
-                    <tr>
-                      <td>test</td>
+                      <td><span>text</span></td>
                     </tr>
                     {folders.map(folder => {
                       return (
