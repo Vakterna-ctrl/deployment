@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react'
+import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
 
 class LogIn extends Component {

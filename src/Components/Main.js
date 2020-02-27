@@ -11,7 +11,7 @@ class Main extends Component {
         super(props)
 
         this.state = {
-          folders: [],
+          folders: []
         }
     }
 
@@ -19,7 +19,6 @@ class Main extends Component {
       const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       dbx.filesListFolder({ path: "" })
         .then((res) => {
-          console.log(res);
           this.setState({ folders: res.entries });
         });
     }
@@ -60,11 +59,11 @@ class Main extends Component {
                     {folders.map(folder => {
                       return (
                         <tr>
-                          {/* <td><a href={URL.createObjectURL(folder)}>{folder.name}</a></td> */}
-                          {/* <td>{folder.name}</td> */}
-                          <Link>
-                            <td>{folder.name}</td>
-                          </Link>
+                          <div>
+                            <Link to={`/folder${folder.path_display}`}>
+                              <td>{folder.name}</td>
+                            </Link>
+                          </div>
                         </tr>
                       )
                     })}

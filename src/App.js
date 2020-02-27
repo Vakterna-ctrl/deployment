@@ -15,8 +15,9 @@ function App() {
       <Router>
         <Route exact path="/login" component={LogIn} />
         <Route path="/auth" component={GetToken} />
+
         <Route path="/main" component={Main} />
-        <Route path="/edit-folder" component={DropBoxFolder} />
+        <Route path="/folder/:path" render={(props) => <DropBoxFolder id={props.match.params.path} />} />
       </Router>
     </div>
   );
