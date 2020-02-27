@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Dropbox } from "dropbox";
 
 import { Link } from 'react-router-dom'
 
@@ -10,11 +11,21 @@ class Main extends Component {
         super(props)
 
         this.state = {
-            // active: false
+          folders: []
         }
     }
 
+    componentDidMount() {
+      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      dbx.filesListFolder({ path: "" })
+        .then((res) => {
+          this.setState({ folders: res.entries });
+        });
+    }
+
     render() {
+      const { folders } = this.state;
+
         return (
           <div className="App">
         <div className="sideLeft">
@@ -45,99 +56,17 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td onClick={this.clickMe}>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td >Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                      <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <Link to ="/edit-folder">
-                        <p>hej</p>
-                    </Link>
+                    {folders.map(folder => {
+                      return (
+                        <tr>
+                          <div>
+                            <Link to={`/folder${folder.path_display}`}>
+                              <td>{folder.name}</td>
+                            </Link>
+                          </div>
+                        </tr>
+                      )
+                    })}
                 </tbody>
                 </table>
             </div>
