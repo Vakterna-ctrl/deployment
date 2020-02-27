@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react'
+import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
 
 class LogIn extends Component {
@@ -12,11 +12,13 @@ class LogIn extends Component {
     }
 
     LogIn = () => {
-        let CLIENT_ID = 'zq9wux9j3d1a5ow';
+        let CLIENT_ID = 't99ul8j5gzu9ufc';
 
         let dbx = new Dropbox({ clientId: CLIENT_ID });
         let LocalHost = 'http://localhost:3000/auth';
-        let authUrl = dbx.getAuthenticationUrl(`https://www.dropbox.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${LocalHost}`);
+        let authUrl = dbx.getAuthenticationUrl(LocalHost);
+
+        console.log(authUrl);
 
         this.setState({ LoginDropBox: authUrl});
     }
