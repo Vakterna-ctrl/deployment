@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { Dropbox } from "dropbox";
+
 import { Link } from 'react-router-dom';
 
 import '../Css/nav.css'
@@ -9,11 +11,24 @@ class Main extends Component {
         super(props)
 
         this.state = {
-            // active: false
+            folders: []
         }
     }
 
+    componentDidMount() {
+      let path = this.props.id;
+      console.log(path);
+
+      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      dbx.filesListFolder({ path: `/${path}` })
+        .then((res) => {
+          this.setState({ folders: res.entries });
+        });
+    }
+
     render() {
+      const { folders } = this.state;
+
         return (
           <div className="App">
         <div className="sideLeft">
@@ -47,36 +62,15 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td>Folder name </td>
-                    </tr>
-                    <tr>
-                        <td onClick={this.clickMe}>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
-                    <tr>
-                    <td>Folder name </td>
-                    </tr>
+                  {folders.map(folder => {
+                      return (
+                        <tr>
+                          <div>
+                              <td>{folder.name}</td>
+                          </div>
+                        </tr>
+                      )
+                    })}
                 </tbody>
                 </table>
             </div>
