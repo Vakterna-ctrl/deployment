@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+
 import { Dropbox } from "dropbox";
+import { Redirect } from 'react-router-dom';
 
 class LogIn extends Component {
     constructor(props) {
@@ -7,7 +9,25 @@ class LogIn extends Component {
     
         this.state = {
             LoginDropBox: '',
-            accessToken: false
+            accessToken: false,
+
+            myToken: null,
+            tokenAvailable: false
+        }
+    }
+
+    componentDidMount() {
+        // get the token from localStorage
+        let token = localStorage.getItem('token');
+        console.log(token);
+
+        if (token) {
+            this.setState({ myToken: token, tokenAvailable: true });
+            console.log('Token is available');
+        }
+        else {
+            this.setState({ myToken: null, tokenAvailable: false });
+            console.log('Token is unavailable');
         }
     }
 
@@ -24,7 +44,9 @@ class LogIn extends Component {
     }
 
     render() {
-        const { LoginDropBox} = this.state;
+        const { LoginDropBox, tokenAvailable } = this.state;
+
+        if (tokenAvailable) return <Redirect to="/main" />
 
         return (
             <div>
