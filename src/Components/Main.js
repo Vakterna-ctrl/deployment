@@ -25,7 +25,7 @@ class Main extends Component {
       const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       dbx.filesListFolder({ path: "" })
         .then((res) => {
-          console.log(res.entries);
+          console.log('HEJ2', res.entries);
           this.setState({ folders: res.entries });
 
 
@@ -35,8 +35,10 @@ class Main extends Component {
 
           return dbx.filesGetThumbnailBatch({ entries });
         })
-        .then((response) => {
-          console.log("HEJ", response.entries);
+        .then((res) => {
+          console.log("HEJ", res.entries);
+          
+          this.setState({ files: res.entries });
         });
     }
 
@@ -64,7 +66,54 @@ class Main extends Component {
     // }
 
     render() {
-      const { folders } = this.state;
+      const { folders, files } = this.state;
+
+      let filess = files.map(file => {
+        console.log('KING', file);
+        console.log('KING  thumbnail', file.thumbnail);
+        let image = `data:image/jpeg;base64,${file.thumbnail}`;
+        console.log('KING', file.metadata.name);
+        console.log(' KING //////////////////////////////////////////////////////////////////////');
+        // console.log('KING', file.metadata.name);
+
+        return (
+          <tr>
+            <div style={{ display: 'flex' }}>
+                <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+              {/* <Link to={`/folder${folder.path_display}`} style={{ border: '1px solid' }}> */}
+                  <td>{file.metadata.name}</td>
+              {/* </Link> */}
+            </div>
+          </tr>
+        )
+      })
+
+      let folderss = folders.map(folder => {
+        console.log('KING2', folders);
+        // render img icon to files and folders!
+        const type = folder['.tag'];
+        let folderThumbnail
+        // type === 'folder' ? folderThumbnail = folderImg : folderThumbnail = fileImg;
+
+        if (type === 'folder') {
+          folderThumbnail = folderImg;
+        
+        // else {
+        //   folderThumbnail = fileImg;
+        // }
+        // let objectUrl = URL.createObjectURL(thumbnail.fileBlob);
+        return (
+          <tr>
+            <div style={{ display: 'flex' }}>
+                <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
+              <Link to={`/folder${folder.path_display}`} style={{ border: '1px solid' }}>
+                  <td>{folder.name}</td>
+              </Link>
+            </div>
+          </tr>
+        )
+      }
+      })
 
         return (
           <div className="App">
@@ -96,7 +145,11 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    {folders.map(folder => {
+                    {folderss}
+
+                    {filess}
+
+                    {/* {folders.map(folder => {
                       // render img icon to files and folders!
                       const type = folder['.tag'];
                       let folderThumbnail
@@ -119,7 +172,7 @@ class Main extends Component {
                           </div>
                         </tr>
                       )
-                    })}
+                    })} */}
                 </tbody>
                 </table>
             </div>
