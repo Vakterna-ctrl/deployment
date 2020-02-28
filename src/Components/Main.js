@@ -64,73 +64,16 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
-                    <tr>
-                      <td><span>text</span></td>
-                    </tr>
+                    
                     {folders.map(folder => {
                       return (
                         <tr>
-                          <div>
-                            <Link to={`/folder${folder.path_display}`}>
+                          <div className="testing">
+                            <Link to={`/folder${folder.path_display}`} className="linktest">
                               <td>{folder.name}</td>
                             </Link>
-                            <td>test</td>
                           </div>
-                         
+                        
                         </tr>
                       )
                     })}
