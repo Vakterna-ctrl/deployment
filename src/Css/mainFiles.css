@@ -27,9 +27,13 @@ span{
 
 .linktest {
   margin-left: 20px;
+  
 }
 
+.folderTd {
+  padding-left: 20px;
 
+}
 
 .testing:hover{
   cursor: pointer;
