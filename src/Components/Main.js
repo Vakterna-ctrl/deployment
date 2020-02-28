@@ -22,40 +22,61 @@ class Main extends Component {
     }
 
     componentDidMount() {
-      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      dbx.filesListFolder({ path: "" })
+      // hämtar folders
+      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      this.dbx.filesListFolder({ path: "" })
         .then((res) => {
           console.log('HEJ2', res.entries);
           this.setState({ folders: res.entries });
 
+        // const entries = res.entries
+        //   .filter(x => x[".tag"] === "file")
+        //   .map((x) => ({ path: x.path_display }));
+        // return this.dbx.filesGetThumbnailBatch({ entries });
+        // })
+        // .then((res) => {
+        //   console.log("HEJ", res);
+        //   this.setState({ files: res.entries });
+        // });
 
-          const entries = res.entries
-            .filter(x => x[".tag"] === "file")
-            .map((x) => ({ path: x.path_display }));
-
-          return dbx.filesGetThumbnailBatch({ entries });
+        const entries = res.entries
+          .filter(x => x[".tag"] === "file")
+          .map((x) => ({ path: x.path_display }));
+        return this.dbx.filesGetThumbnailBatch({
+          entries: entries,
+          
+        });
         })
         .then((res) => {
           console.log("HEJ", res);
-          
           this.setState({ files: res.entries });
         });
     }
 
     componentDidUpdate(prevprops, prevState) {
-      if (prevState.folders === this.state.folders) {
-    const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
+      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
 
-  let path = this.props.location.pathname;
-  path = path.slice(5);
-  dbx.filesListFolder({ path: path })
-  .then((response) => {
-    console.log("HEJ", response)
-    this.setState({
-      folders: response.entries,
-    })
-  })
-    console.log(this.props.location.pathname)
+      let path = this.props.location.pathname;
+      path = path.slice(5);
+      this.dbx.filesListFolder({ path: path })
+      .then((res) => {
+        console.log("HEJ", res)
+        this.setState({ folders: res.entries })
+
+        const entries = res.entries
+        .filter(x => x[".tag"] === "file")
+        .map((x) => ({ path: x.path_display }));
+      return this.dbx.filesGetThumbnailBatch({ entries });
+      })
+      .then((res) => {
+        console.log("HEJ", res);
+        this.setState({ files: res.entries });
+      });
+        console.log(this.props.location.pathname);
+
+
+
 
     //   const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
     //   dbx.filesGetThumbnailBatch({  
