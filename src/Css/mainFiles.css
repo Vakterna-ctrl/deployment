@@ -38,6 +38,10 @@ td{
   
 }
 
+td:hover {
+  font-size: 25px;
+}
+
 .folderTd {
   padding-left: 20px;
 
