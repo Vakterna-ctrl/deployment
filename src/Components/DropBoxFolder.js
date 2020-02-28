@@ -68,7 +68,7 @@ class Main extends Component {
                       return (
                         <tr>
                           <div  className="testing">
-                              <td className="folderTd">{folder.name}</td>
+                              <td>{folder.name}</td>
                           </div>
                         </tr>
                       )

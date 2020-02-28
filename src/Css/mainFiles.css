@@ -21,12 +21,20 @@ span{
     font-style: italic;
     font-size: large;
     font-weight: 500;
-    width: 570px;
+    width: 800px;
     
 }
 
 .linktest {
   margin-left: 20px;
+  
+
+}
+
+td{
+  font-size: 20px;
+  transition: all 0.5s;
+  transition-timing-function: ease-in-out;
   
 }
 
@@ -52,16 +60,22 @@ th {
 
 tr{
     margin-left: 100px;
-    border-collapse: collapse;
+    
+    border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
-table td:nth-child(even){
-  background-color: #fcf5f5;
-  
+table tr:nth-child(even){
+  background-color: #ece9e9;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
-table td:hover {
+
+
+table .testing:hover {
   background-color: #f0ebeb;
+  font-size: 25px;
 }
 
 .files::-webkit-scrollbar {
