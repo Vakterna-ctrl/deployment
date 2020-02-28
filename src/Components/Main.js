@@ -36,23 +36,26 @@ class Main extends Component {
           return dbx.filesGetThumbnailBatch({ entries });
         })
         .then((res) => {
-          console.log("HEJ", res.entries);
+          console.log("HEJ", res);
           
           this.setState({ files: res.entries });
         });
     }
 
-    // componentDidUpdate() {
-    //   const { folders, files } = this.state;
-    //   folders.map(Files => {
-    //     const type = Files['.tag'];
+    componentDidUpdate(prevprops, prevState) {
+      if (prevState.folders === this.state.folders) {
+    const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
 
-    //     if (type === 'file') {
-    //       // console.log(Files.name);
-    //     }
-    //   });
-
-    //   // console.log(files);
+  let path = this.props.location.pathname;
+  path = path.slice(5);
+  dbx.filesListFolder({ path: path })
+  .then((response) => {
+    console.log("HEJ", response)
+    this.setState({
+      folders: response.entries,
+    })
+  })
+    console.log(this.props.location.pathname)
 
     //   const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
     //   dbx.filesGetThumbnailBatch({  
@@ -63,7 +66,8 @@ class Main extends Component {
     //     }]  
     //   })
     //   // .then(res => console.log(res))
-    // }
+  }
+    }
 
     render() {
       const { folders, files } = this.state;
@@ -106,7 +110,7 @@ class Main extends Component {
           <tr>
             <div style={{ display: 'flex' }}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-              <Link to={`/folder${folder.path_display}`} style={{ border: '1px solid' }}>
+              <Link to={`/main${folder.path_display}`} style={{ border: '1px solid' }}>
                   <td>{folder.name}</td>
               </Link>
             </div>
