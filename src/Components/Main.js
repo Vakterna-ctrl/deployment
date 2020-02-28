@@ -28,72 +28,43 @@ class Main extends Component {
           console.log(res.entries);
           this.setState({ folders: res.entries });
 
-          // get thumbnails for the current batch of files
-      // dbx.filesGetThumbnailBatch({ 
-      //   entries: res.entries.map(function(entry){
-      //     console.log(entry);
-      //       return {
-      //         path: entry.id,
-      //         format : {'.tag': 'jpeg'},
-      //         size: { '.tag': 'w2048h1536'},
-      //         mode: { '.tag': 'strict' }
-      //       }
-      //   })
-      // });
+
+          const entries = res.entries
+            .filter(x => x[".tag"] === "file")
+            .map((x) => ({ path: x.path_display }));
+
+          return dbx.filesGetThumbnailBatch({ entries });
+        })
+        .then((response) => {
+          console.log("HEJ", response.entries);
         });
-
-
-        // get images from image files!
-        // dbx.filesGetThumbnailBatch({
-        //   entries: [{
-        //     path: '/image1.png',
-        //     size: 'w32h32',
-        //     format: 'png'
-        //   }]
-        // })
-        // .then(res => {
-        //   console.log(res);
-        // })
-
-        // dbx.filesGetThumbnailBatch({
-        //   entries: 
-        // })
-        // .then(res => {
-        //   console.log(res);
-        // })
-
-        // dbx.filesGetThumbnail({"path": "/image1.png"})
-        // .then(res => {
-        //   // console.log(res);
-        //   this.setState({ thumbnail: res });
-        // })
     }
 
-    componentDidUpdate() {
-      const { folders, files } = this.state;
-      folders.map(Files => {
-        const type = Files['.tag'];
+    // componentDidUpdate() {
+    //   const { folders, files } = this.state;
+    //   folders.map(Files => {
+    //     const type = Files['.tag'];
 
-        if (type === 'file') {
-          // console.log(Files.name);
-        }
-      });
+    //     if (type === 'file') {
+    //       // console.log(Files.name);
+    //     }
+    //   });
 
-      // console.log(files);
+    //   // console.log(files);
 
-      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      dbx.filesGetThumbnailBatch({  
-        entries: [{  
-          path: '/image1.png image-142881.jpg',  
-          size: 'w32h32',  
-          format: 'png',  
-        }]  
-      })
-      // .then(res => console.log(res))
-    }
+    //   const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+    //   dbx.filesGetThumbnailBatch({  
+    //     entries: [{  
+    //       path: '/image1.png image-142881.jpg',  
+    //       size: 'w32h32',  
+    //       format: 'png',  
+    //     }]  
+    //   })
+    //   // .then(res => console.log(res))
+    // }
 
     render() {
-      const { folders, thumbnail } = this.state;
+      const { folders } = this.state;
 
         return (
           <div className="App">
@@ -125,16 +96,9 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    {folders.filter(f => f['.tag'] === 'file').map(fl =>{
-                      // console.log(fl);
-                    })
-                    }
-
-
                     {folders.map(folder => {
                       // render img icon to files and folders!
                       const type = folder['.tag'];
-                      let fileThumbnail
                       let folderThumbnail
                       // type === 'folder' ? folderThumbnail = folderImg : folderThumbnail = fileImg;
 
@@ -142,43 +106,8 @@ class Main extends Component {
                         folderThumbnail = folderImg;
                       }
                       else {
-                        // folderThumbnail = fileImg;
-                        // console.log(folder.path_display);
-
-                        let img = folder.path_display;
-
-                        console.log(img);
-
-                        const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-
-                        //get images from image files!
-                        dbx.filesGetThumbnailBatch({
-                          entries: [{
-                            path: `${img}`,
-                            size: 'w32h32',
-                            format: 'png'
-                          }]
-                        })
-                        .then(res => {
-                          console.log(res.entries[0].thumbnail);
-                          // folderThumbnail = res.entries[0].thumbnail;
-                          folderThumbnail = `data:image/jpeg;base64, ${res.entries[0].thumbnail}`;
-                          //"data:image/jpeg;base64, ${file.thumbnail}"
-                          // fileThumbnail = res.
-                        })
-
-                        // let obj = {};
-                        // obj = folder
-
-                        // let arr = [];
-                        // let arr2 = [];
-
-                        // arr.push(obj);
-                        // arr2.push(arr)
-
-                        // console.log(arr2);
+                        folderThumbnail = fileImg;
                       }
-
                       // let objectUrl = URL.createObjectURL(thumbnail.fileBlob);
                       return (
                         <tr>
