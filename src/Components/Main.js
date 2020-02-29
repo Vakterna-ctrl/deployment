@@ -40,7 +40,7 @@ class Main extends Component {
     }
 
     render() {
-      const { folders,deleteButtonClicked } = this.state;
+      const { folders } = this.state;
 
 
         return (
