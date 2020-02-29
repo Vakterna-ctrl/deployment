@@ -4,8 +4,7 @@
     background-color: white;
     overflow-y: scroll;
     background-color: white;
-    
-    border-top-right-radius: 180px;
+    border-top-right-radius: 90px;
 
 }
 
@@ -21,13 +20,12 @@ span{
     font-style: italic;
     font-size: large;
     font-weight: 500;
-    width: 800px;
-    
+
 }
 
 .linktest {
   margin-left: 20px;
-  
+
 
 }
 
@@ -35,8 +33,9 @@ td{
   font-size: 20px;
   transition: all 0.5s;
   transition-timing-function: ease-in-out;
-  
+
 }
+
 
 td:hover {
   font-size: 25px;
@@ -58,6 +57,7 @@ th {
     font-size: 20px;
     font-style: italic;
     text-decoration: underline;
+
 }
 
 
@@ -79,7 +79,7 @@ table .testing:hover {
 .files::-webkit-scrollbar {
     width: 5px;
     height: 5px;
-    
+
   }
   .files::-webkit-scrollbar-track {
     background-color: none;
@@ -88,6 +88,15 @@ table .testing:hover {
   .files::-webkit-scrollbar-thumb {
     background-color: rgb(148, 148, 148);
     border-radius: 10px;
-    
+
   }
-  
+.table{
+  width: 100%
+}
+.option{
+  margin:0;
+}
+.dropdownList{
+  height: 25px;
+  width: 100px;
+}

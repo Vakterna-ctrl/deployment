@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
 import { Link } from 'react-router-dom'
-
+import DropdownOptions from './DropdownOptions'
+import DeleteWindow from '../Components/DeleteWindow'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -15,8 +16,19 @@ class Main extends Component {
         super(props)
 
         this.state = {
-          folders: []
+          folders: [],
+          show: false,
         }
+    }
+    // delets files and closes delete window
+    onDelete = (path_delete) =>{
+      const{folders} = this.state
+      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      dbx.filesDelete({path: path_delete})
+      .then(response =>{
+        let newFolder = folders.filter( folder => folder.name !== response.name)
+        this.setState({folders: newFolder, deleteButtonClicked : false})
+      })
     }
 
     componentDidMount() {
@@ -28,11 +40,11 @@ class Main extends Component {
     }
 
     render() {
-      const { folders } = this.state;
+      const { folders,deleteButtonClicked } = this.state;
+
 
         return (
-          <div className="App">
-            
+          <div className="App" >
         <div className="sideLeft">
           <div className="Logo">
             Logo
@@ -57,9 +69,9 @@ class Main extends Component {
           </header>
 
           <main>
-          
+
           <div className="files">
-                <table>
+                <table className="table">
                     <thead>
                       <tr>
                         <th>Folder/file name</th>
@@ -67,23 +79,32 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    
+
                     {folders.map(folder => {
                       return (
-                        <tr>
-                          <div className="testing">
+                        <tr key={folder.content_hash} className="testing">
                             <Link to={`/folder${folder.path_display}`} className="linktest">
-                              <td>{folder.name}</td>
+                              <td>{folder.name} </td>
                             </Link>
-                          </div>
-                        
+                            <td className="dropdownList">
+                            <DropdownOptions
+                             onDelete={this.onDelete}
+                             path={folder.path_display}
+                             name={folder.name}
+
+                             />
+
+                             </td>
+
                         </tr>
+
                       )
+
                     })}
 
                 </tbody>
                 </table>
-                
+
             </div>
 
             <div className="sidebarRight">
@@ -95,7 +116,7 @@ class Main extends Component {
                 <li> New Map </li>
                 <br />
                 <li> New Shared Map </li>
-                
+
             </ul>
             <p className="sideText">Choose your option</p>
             </div>
