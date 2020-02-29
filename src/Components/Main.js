@@ -8,7 +8,6 @@ import LogOut from './LogOut';
 import '../Css/nav.css'
 
 import folderImg from '../Img/folder-img.png';
-import fileImg from '../Img/file-img.png';
 
 class Main extends Component {
     constructor(props) {
@@ -28,16 +27,6 @@ class Main extends Component {
         .then((res) => {
           console.log('HEJ2', res.entries);
           this.setState({ folders: res.entries });
-
-        // const entries = res.entries
-        //   .filter(x => x[".tag"] === "file")
-        //   .map((x) => ({ path: x.path_display }));
-        // return this.dbx.filesGetThumbnailBatch({ entries });
-        // })
-        // .then((res) => {
-        //   console.log("HEJ", res);
-        //   this.setState({ files: res.entries });
-        // });
 
         const entries = res.entries
           .filter(x => x[".tag"] === "file")
@@ -88,21 +77,14 @@ class Main extends Component {
       const { folders, files } = this.state;
 
       let minaFiler = files.map(file => {
-        console.log('KING', file);
-        console.log('KING  thumbnail', file.thumbnail);
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
-        // console.log('KING', file.metadata.name);
-        console.log(' KING //////////////////////////////////////////////////////////////////////');
-        // console.log('KING', file.metadata.name);
 
         return (
           <tr>
             <div style={{ display: 'flex' }}>
                 <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-              {/* <Link to={`/folder${folder.path_display}`} style={{ border: '1px solid' }}> */}
                   <td>{file.metadata.name}</td>
                   <button onClick={() => this.downloadFile(file)}>Download file!</button>
-              {/* </Link> */}
             </div>
           </tr>
         )
@@ -110,18 +92,12 @@ class Main extends Component {
 
       let minaFolders = folders.map(folder => {
         console.log('KING2', folders);
-        // render img icon to files and folders!
+        // render img icons to folders!
         const type = folder['.tag'];
         let folderThumbnail
-        // type === 'folder' ? folderThumbnail = folderImg : folderThumbnail = fileImg;
 
         if (type === 'folder') {
           folderThumbnail = folderImg;
-        
-        // else {
-        //   folderThumbnail = fileImg;
-        // }
-        // let objectUrl = URL.createObjectURL(thumbnail.fileBlob);
         return (
           <tr>
             <div style={{ display: 'flex' }}>
@@ -166,33 +142,7 @@ class Main extends Component {
 
                   <tbody>
                     {minaFolders}
-
                     {minaFiler}
-
-                    {/* {folders.map(folder => {
-                      // render img icon to files and folders!
-                      const type = folder['.tag'];
-                      let folderThumbnail
-                      // type === 'folder' ? folderThumbnail = folderImg : folderThumbnail = fileImg;
-
-                      if (type === 'folder') {
-                        folderThumbnail = folderImg;
-                      }
-                      else {
-                        folderThumbnail = fileImg;
-                      }
-                      // let objectUrl = URL.createObjectURL(thumbnail.fileBlob);
-                      return (
-                        <tr>
-                          <div style={{ display: 'flex' }}>
-                              <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-                            <Link to={`/folder${folder.path_display}`} style={{ border: '1px solid' }}>
-                                <td>{folder.name}</td>
-                            </Link>
-                          </div>
-                        </tr>
-                      )
-                    })} */}
                 </tbody>
                 </table>
             </div>
