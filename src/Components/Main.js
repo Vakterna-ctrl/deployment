@@ -3,9 +3,12 @@ import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
 import { Link } from 'react-router-dom'
 
-import LogOut from './LogOut';
 
+import '../Css/icons.css'
+import '../Css/mainFiles.css'
+import LogOut from './LogOut';
 import '../Css/nav.css'
+import '../Css/UlItems.css'
 
 import folderImg from '../Img/folder-img.png';
 
@@ -113,25 +116,31 @@ class Main extends Component {
 
         return (
           <div className="App">
+            
         <div className="sideLeft">
-          <div>
+          <div className="Logo">
             Logo
           </div>
           <ul>
-            <li> Link 1 </li>
-            <li> Link 7 </li>
-            <li> Link 3 </li>
-            <li> Link 1 </li>
+            <li> Start </li>
+            <br/>
+            <li> Filter </li>
+            <br/>
+            <li> Paper </li>
+            <br/>
+            <li> Transfer </li>
           </ul>
         </div>
 
         <div className={"bigBox"}>
           <header>
-            <input placeholder="Search" type="text" />
-            <LogOut />
+            <h1>Project X</h1>
+              <input placeholder="Search" type="text" />
+              <LogOut />
           </header>
 
           <main>
+          
           <div className="files">
                 <table>
                     <thead>
@@ -145,15 +154,21 @@ class Main extends Component {
                     {minaFiler}
                 </tbody>
                 </table>
+                
             </div>
 
             <div className="sidebarRight">
             <ul>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
+                <li> Upload File </li>
+                <br />
+                <li> Upload Map </li>
+                <br />
+                <li> New Map </li>
+                <br />
+                <li> New Shared Map </li>
+                
             </ul>
+            <p className="sideText">Choose your option</p>
             </div>
           </main>
         </div>
