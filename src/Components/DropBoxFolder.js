@@ -31,24 +31,26 @@ class Main extends Component {
         return (
           <div className="App">
         <div className="sideLeft">
-          <div>
+          <div className="Logo">
             Logo
           </div>
           <ul>
-            <li> Link 1 </li>
-            <li> Link 7 </li>
-            <li> Link 3 </li>
-            <li> Link 1 </li>
+            <li> Start </li>
+            <br/>
+            <li> Filter </li>
+            <br/>
+            <li> Paper </li>
+            <br/>
+            <li> Transfer </li>
           </ul>
         </div>
 
         <div className={"bigBox"}>
           <header>
+            <h1>Project X</h1>
             <input placeholder="Search" type="text" />
             <button>Log out</button>
-            <Link to="/main">
-                <p>Return to Main page</p>
-            </Link>
+            
           </header>
 
           <main>
@@ -64,7 +66,7 @@ class Main extends Component {
                   {folders.map(folder => {
                       return (
                         <tr>
-                          <div>
+                          <div  className="testing">
                               <td>{folder.name}</td>
                           </div>
                         </tr>
@@ -76,11 +78,19 @@ class Main extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
-                <li> Link 1 </li>
+                <li> Upload File </li>
+                <br />
+                <li> Upload Map </li>
+                <br />
+                <li> New Map </li>
+                <br />
+                <li> New Shared Map </li>
+                
             </ul>
+            <p className="sideText">Choose your option</p>
+            <Link to="/main">
+                <p className="return">To The Main Page</p>
+            </Link>
             </div>
           </main>
         </div>

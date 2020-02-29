@@ -11,7 +11,9 @@ import GetToken from "./Components/GetToken";
 
 function App() {
   return (
+    
     <div className="App">
+      
       <Router>
         <Route exact path="/" component={LogIn} />
         <Route path="/auth" component={GetToken} />
