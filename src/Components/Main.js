@@ -10,25 +10,109 @@ import LogOut from './LogOut';
 import '../Css/nav.css'
 import '../Css/UlItems.css'
 
+import folderImg from '../Img/folder-img.png';
+
 class Main extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-          folders: []
+          folders: [],
+          thumbnail: {},
+          files: []
         }
     }
 
     componentDidMount() {
-      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      dbx.filesListFolder({ path: "" })
+      // hämtar folders
+      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      this.dbx.filesListFolder({ path: "" })
         .then((res) => {
+          console.log('HEJ2', res.entries);
           this.setState({ folders: res.entries });
+
+        const entries = res.entries
+          .filter(x => x[".tag"] === "file")
+          .map((x) => ({ path: x.path_display }));
+        return this.dbx.filesGetThumbnailBatch({
+          entries: entries,
+        });
+        })
+        .then((res) => {
+          console.log("HEJ", res);
+          this.setState({ files: res.entries });
         });
     }
 
+    componentDidUpdate(prevprops, prevState) {
+      if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
+      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+
+      let path = this.props.location.pathname;
+      path = path.slice(5);
+      this.dbx.filesListFolder({ path: path })
+      .then((res) => {
+        console.log("HEJ", res)
+        this.setState({ folders: res.entries })
+
+        const entries = res.entries
+        .filter(x => x[".tag"] === "file")
+        .map((x) => ({ path: x.path_display }));
+      return this.dbx.filesGetThumbnailBatch({ entries });
+      })
+      .then((res) => {
+        console.log("HEJ", res);
+        this.setState({ files: res.entries });
+      });
+        console.log(this.props.location.pathname);
+  }
+  }
+
+  downloadFile = (file) => {
+    // this.dbx.filesGetThumbnail({"path": `{}`})
+    //   .then(res => {
+    //     console.log('HHH', res);
+    //   })
+    console.log('HHH', file);
+  }
+
     render() {
-      const { folders } = this.state;
+      const { folders, files } = this.state;
+
+      let minaFiler = files.map(file => {
+        let image = `data:image/jpeg;base64,${file.thumbnail}`;
+
+        return (
+          <tr>
+            <div style={{ display: 'flex' }}>
+                <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+                  <td>{file.metadata.name}</td>
+                  <button onClick={() => this.downloadFile(file)}>Download file!</button>
+            </div>
+          </tr>
+        )
+      })
+
+      let minaFolders = folders.map(folder => {
+        console.log('KING2', folders);
+        // render img icons to folders!
+        const type = folder['.tag'];
+        let folderThumbnail
+
+        if (type === 'folder') {
+          folderThumbnail = folderImg;
+        return (
+          <tr>
+            <div style={{ display: 'flex' }}>
+                <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
+              <Link to={`/main${folder.path_display}`} style={{ border: '1px solid' }}>
+                  <td>{folder.name}</td>
+              </Link>
+            </div>
+          </tr>
+        )
+      }
+      })
 
         return (
           <div className="App">
@@ -50,10 +134,9 @@ class Main extends Component {
 
         <div className={"bigBox"}>
           <header>
-
             <h1>Project X</h1>
               <input placeholder="Search" type="text" />
-              <button>Log out</button>
+              <LogOut />
           </header>
 
           <main>
@@ -67,20 +150,8 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
-                    
-                    {folders.map(folder => {
-                      return (
-                        <tr>
-                          <div className="testing">
-                            <Link to={`/folder${folder.path_display}`} className="linktest">
-                              <td>{folder.name}</td>
-                            </Link>
-                          </div>
-                        
-                        </tr>
-                      )
-                    })}
-
+                    {minaFolders}
+                    {minaFiler}
                 </tbody>
                 </table>
                 

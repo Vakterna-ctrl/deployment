@@ -17,7 +17,6 @@ class Main extends Component {
 
     componentDidMount() {
       let path = this.props.id;
-      console.log(path);
 
       const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       dbx.filesListFolder({ path: `/${path}` })
