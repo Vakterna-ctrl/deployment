@@ -19,7 +19,8 @@ class Main extends Component {
         this.state = {
           folders: [],
           thumbnail: {},
-          files: []
+          files: [],
+          URL: null
         }
     }
 
@@ -69,25 +70,27 @@ class Main extends Component {
   }
 
   downloadFile = (file) => {
-    // this.dbx.filesGetThumbnail({"path": `{}`})
-    //   .then(res => {
-    //     console.log('HHH', res);
-    //   })
-    console.log('HHH', file);
+    this.dbx.filesGetThumbnail({"path": file})
+      .then(res => {
+        console.log('HHH', res);
+        this.setState({ URL: res.fileBlob });
+      });
   }
 
     render() {
-      const { folders, files } = this.state;
+      const { folders, files, URL } = this.state;
 
       let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
+        let fileName = file.metadata.name;
 
         return (
           <tr>
             <div style={{ display: 'flex' }}>
                 <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-                  <td>{file.metadata.name}</td>
-                  <button onClick={() => this.downloadFile(file)}>Download file!</button>
+                  {/* <td>{file.metadata.name}</td> */}
+                  <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
+                  {/* <button onClick={() => this.downloadFile(file)}>Download file!</button> */}
             </div>
           </tr>
         )
@@ -105,9 +108,10 @@ class Main extends Component {
           <tr>
             <div style={{ display: 'flex' }}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-              <Link to={`/main${folder.path_display}`} style={{ border: '1px solid' }}>
+                <td>{folder.name}</td>
+              {/* <Link to={`/main${folder.path_display}`} style={{ border: '1px solid' }}>
                   <td>{folder.name}</td>
-              </Link>
+              </Link> */}
             </div>
           </tr>
         )
