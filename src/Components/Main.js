@@ -92,7 +92,7 @@ class Main extends Component {
       })
 
       let minaFolders = folders.map(folder => {
-        // render img icons to folders!
+        // render img icons to folders !
         const type = folder['.tag'];
         let folderThumbnail
 
