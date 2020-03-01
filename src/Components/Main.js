@@ -78,9 +78,10 @@ class Main extends Component {
       const { folders, files, URL } = this.state;
 
       let minaFiler = files.map(file => {
+        console.log(file)
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName = file.metadata.name;
-
+        
         return (
           <tr>
             <div style={{ display: 'flex' }}>
