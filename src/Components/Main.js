@@ -10,6 +10,7 @@ import '../Css/nav.css'
 import '../Css/UlItems.css'
 
 import folderImg from '../Img/folder-img.png';
+import { Link } from 'react-router-dom';
 
 class Main extends Component {
     constructor(props) {
@@ -80,6 +81,7 @@ class Main extends Component {
       let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName = file.metadata.name;
+        console.log('qw', file);
 
         return (
           <tr>
@@ -102,7 +104,9 @@ class Main extends Component {
           <tr>
             <div style={{ display: 'flex' }}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-                <td>{folder.name}</td>
+                <Link to={`/main${folder.path_display}`}>
+                  <td>{folder.name}</td>
+                </Link>
             </div>
           </tr>
         )
