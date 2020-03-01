@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
-import { Link } from 'react-router-dom'
 
 
 import '../Css/icons.css'
@@ -45,7 +44,7 @@ class Main extends Component {
         });
     }
 
-    componentDidUpdate(prevprops, prevState) {
+    componentDidUpdate(prevProps, prevState) {
       if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
 
@@ -53,7 +52,6 @@ class Main extends Component {
       path = path.slice(5);
       this.dbx.filesListFolder({ path: path })
       .then((res) => {
-        console.log("HEJ", res)
         this.setState({ folders: res.entries })
 
         const entries = res.entries
@@ -62,18 +60,17 @@ class Main extends Component {
       return this.dbx.filesGetThumbnailBatch({ entries });
       })
       .then((res) => {
-        console.log("HEJ", res);
         this.setState({ files: res.entries });
       });
-        console.log(this.props.location.pathname);
   }
   }
 
   downloadFile = (file) => {
     this.dbx.filesGetThumbnail({"path": file})
       .then(res => {
-        console.log('HHH', res);
-        this.setState({ URL: res.fileBlob });
+        console.log('HEJ 3', res);
+        let objURL = window.URL.createObjectURL(res.fileBlob);
+        this.setState({ URL: objURL });
       });
   }
 
@@ -87,17 +84,14 @@ class Main extends Component {
         return (
           <tr>
             <div style={{ display: 'flex' }}>
-                <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-                  {/* <td>{file.metadata.name}</td> */}
-                  <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
-                  {/* <button onClick={() => this.downloadFile(file)}>Download file!</button> */}
+              <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+              <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
             </div>
           </tr>
         )
       })
 
       let minaFolders = folders.map(folder => {
-        console.log('KING2', folders);
         // render img icons to folders!
         const type = folder['.tag'];
         let folderThumbnail
@@ -109,9 +103,6 @@ class Main extends Component {
             <div style={{ display: 'flex' }}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
                 <td>{folder.name}</td>
-              {/* <Link to={`/main${folder.path_display}`} style={{ border: '1px solid' }}>
-                  <td>{folder.name}</td>
-              </Link> */}
             </div>
           </tr>
         )
