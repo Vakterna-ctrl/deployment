@@ -13,7 +13,7 @@ span{
   margin-left: 20px;
 }
 
-.testing {
+td {
     color: black;
     border-bottom: 5px double rgba(0,0,0,0.56);
     border-bottom-left-radius: 30px;
@@ -47,7 +47,7 @@ td:hover {
 
 }
 
-.testing:hover{
+td:hover{
   cursor: pointer;
 }
 
@@ -69,7 +69,7 @@ table tr:nth-child(even){
 
 
 
-table .testing:hover {
+td:hover {
   background-color: #f0ebeb;
   font-size: 25px;
   border-bottom-right-radius: 30px;

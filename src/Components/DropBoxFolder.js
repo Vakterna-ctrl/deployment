@@ -66,7 +66,7 @@ class Main extends Component {
                   {folders.map(folder => {
                       return (
                         <tr>
-                          <div  className="testing">
+                          <div>
                               <td>{folder.name}</td>
                           </div>
                         </tr>

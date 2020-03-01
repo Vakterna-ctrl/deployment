@@ -18,7 +18,6 @@ class Main extends Component {
 
         this.state = {
           folders: [],
-          thumbnail: {},
           files: [],
           URL: null
         }
@@ -79,10 +78,14 @@ class Main extends Component {
       const { folders, files, URL } = this.state;
 
       let minaFiler = files.map(file => {
-        console.log(file)
+        console.log("hej65",file)
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
-        let fileName = file.metadata.name;
-
+        let fileName
+        if(file[".tag"] === "failure"){
+          return null
+        } else {
+          fileName = file.metadata.name;
+        }
         console.log('qw', file);
         return (
           <tr>
