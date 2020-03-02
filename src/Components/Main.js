@@ -37,6 +37,7 @@ class Main extends Component {
 
     componentDidMount() {
       // hämtar folders
+
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -51,7 +52,6 @@ class Main extends Component {
         });
         })
         .then((res) => {
-          console.log("HEJ", res);
           this.setState({ files: res.entries });
         });
     }
@@ -88,50 +88,48 @@ class Main extends Component {
 
     render() {
       const { folders, files, URL } = this.state;
-      
+
       let minaFiler = files.map(file => {
-        console.log("hej65",file)
 
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName
         let date_input
         let datum
         let size
-        let i
         let newSize
+        let i
         if(file[".tag"] === "failure"){
           return null
         }
         else {
-          
+
           fileName = file.metadata.name;
           date_input = new Date((file.metadata.client_modified));
           datum = new Date(date_input).toDateString();
-          
+
           size = file.metadata.size;
           i = Math.floor(Math.log(size) / Math.log(1024));
           newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
-          
+
         }
-        
         return (
           <tr>
             <td>
             <div style={{ display: 'flex' }}>
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
+
               {" Latest change: " + datum}
               
               {" Filesize: " + newSize}
             </div>
-            </td> 
+            </td>
           </tr>
         )
       })
 
       let minaFolders = folders.map(folder => {
         // render img icons to folders !
-        console.log("80", folder)
 
         const type = folder['.tag'];
         let folderThumbnail
