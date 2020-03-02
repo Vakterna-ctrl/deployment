@@ -2,13 +2,7 @@ import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
 import LogOut from './LogOut'
-import { Link } from 'react-router-dom'
 import DropdownOptions from './DropdownOptions'
-import DeleteWindow from '../Components/DeleteWindow'
-import LogOut from './LogOut';
-import { Link } from 'react-router-dom'
-import DropdownOptions from './DropdownOptions'
-import DeleteWindow from '../Components/DeleteWindow'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -145,11 +139,11 @@ class Main extends Component {
 
                 <td className="dropdownList">
                 <DropdownOptions
-                 onDelete={this.onDelete}
-                 path={folder.path_display}
-                 name={folder.name}
-                 />
-                 </td>
+                  onDelete={this.onDelete}
+                  path={folder.path_display}
+                  name={folder.name}
+                  />
+                  </td>
             </div>
             </td>
           </tr>
