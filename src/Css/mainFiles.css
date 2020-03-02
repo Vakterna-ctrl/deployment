@@ -90,4 +90,10 @@ td:hover {
     border-radius: 10px;
     
   }
-  
+ 
+
+  img {
+    margin-left: 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
