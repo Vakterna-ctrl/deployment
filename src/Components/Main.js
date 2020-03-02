@@ -37,6 +37,7 @@ class Main extends Component {
 
     componentDidMount() {
       // hämtar folders
+
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -51,7 +52,6 @@ class Main extends Component {
         });
         })
         .then((res) => {
-          console.log("HEJ", res);
           this.setState({ files: res.entries });
         });
     }
@@ -88,14 +88,14 @@ class Main extends Component {
 
     render() {
       const { folders, files, URL } = this.state;
-      
+
       let minaFiler = files.map(file => {
-        console.log("hej65",file)
 
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName
         let date_input
         let datum
+
 
         if(file[".tag"] === "failure"){
           return null
@@ -105,7 +105,6 @@ class Main extends Component {
           date_input = new Date((file.metadata.client_modified));
           datum = new Date(date_input).toDateString();
         }
-        console.log('qw', file);
         return (
           <tr>
             <td>
@@ -114,14 +113,13 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
               {datum}
             </div>
-            </td> 
+            </td>
           </tr>
         )
       })
 
       let minaFolders = folders.map(folder => {
         // render img icons to folders !
-        console.log("80", folder)
 
         const type = folder['.tag'];
         let folderThumbnail
