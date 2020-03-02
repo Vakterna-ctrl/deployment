@@ -67,7 +67,9 @@ table tr:nth-child(even){
   border-bottom-left-radius: 30px;
 }
 
-
+h2 {
+  color: black;
+}
 
 td:hover {
   background-color: #f0ebeb;
