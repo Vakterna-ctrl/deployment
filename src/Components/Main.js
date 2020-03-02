@@ -20,8 +20,8 @@ class Main extends Component {
           folders: [],
           show: false,
           files: [],
-          URL: null
-
+          URL: null,
+          
         }
     }
     // delets files and closes delete window
@@ -120,7 +120,7 @@ class Main extends Component {
             <div style={{ display: 'flex' }}>
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
-              {"Latest change: " + datum}
+              {" Latest change: " + datum}
               
               {" Filesize: " + newSize}
             </div>
@@ -217,9 +217,11 @@ class Main extends Component {
                 <li> New Map </li>
                 <br />
                 <li> New Shared Map </li>
-
+                
             </ul>
             <p className="sideText">Choose your option</p>
+
+            
             </div>
           </main>
         </div>
