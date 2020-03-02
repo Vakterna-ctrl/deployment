@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
+import LogOut from './LogOut';
 import { Link } from 'react-router-dom'
 import DropdownOptions from './DropdownOptions'
 import DeleteWindow from '../Components/DeleteWindow'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
-import LogOut from './LogOut';
 import '../Css/nav.css'
 import '../Css/UlItems.css'
 
@@ -90,15 +90,22 @@ class Main extends Component {
 
     render() {
       const { folders, files, URL } = this.state;
-
+      
       let minaFiler = files.map(file => {
         console.log("hej65",file)
+
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName
+        let date_input
+        let datum
+
         if(file[".tag"] === "failure"){
           return null
-        } else {
+        }
+        else {
           fileName = file.metadata.name;
+          date_input = new Date((file.metadata.client_modified));
+          datum = new Date(date_input).toDateString();
         }
         console.log('qw', file);
         return (
@@ -107,6 +114,7 @@ class Main extends Component {
             <div style={{ display: 'flex' }}>
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
+              {datum}
             </div>
             </td> 
           </tr>
@@ -115,6 +123,8 @@ class Main extends Component {
 
       let minaFolders = folders.map(folder => {
         // render img icons to folders !
+        console.log("80", folder)
+
         const type = folder['.tag'];
         let folderThumbnail
 
@@ -122,7 +132,6 @@ class Main extends Component {
           folderThumbnail = folderImg;
         return (
           <tr>
-          
             <td>
             <div style={{ display: 'flex' }}>
             <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
@@ -180,8 +189,12 @@ class Main extends Component {
                   </thead>
 
                   <tbody>
+                  <h2>Folders!</h2>
                     {minaFolders}
+
+                  <h2 style={{ marginTop: '10%' }}>Files!</h2>
                     {minaFiler}
+
                 </tbody>
                 </table>
 
