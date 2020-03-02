@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
-
+import { Link } from 'react-router-dom'
+import DropdownOptions from './DropdownOptions'
+import DeleteWindow from '../Components/DeleteWindow'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -18,9 +20,21 @@ class Main extends Component {
 
         this.state = {
           folders: [],
+          show: false,
           files: [],
           URL: null
+
         }
+    }
+    // delets files and closes delete window
+    onDelete = (path_delete) =>{
+      const{folders} = this.state
+      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      dbx.filesDelete({path: path_delete})
+      .then(response =>{
+        let newFolder = folders.filter( folder => folder.name !== response.name)
+        this.setState({folders: newFolder, deleteButtonClicked : false})
+      })
     }
 
     componentDidMount() {
@@ -115,6 +129,14 @@ class Main extends Component {
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
                 </Link>
+
+                <td className="dropdownList">
+                <DropdownOptions
+                 onDelete={this.onDelete}
+                 path={folder.path_display}
+                 name={folder.name}
+                 />
+                 </td>
             </div>
             </td>
           </tr>
@@ -122,9 +144,9 @@ class Main extends Component {
       }
       })
 
+
         return (
-          <div className="App">
-            
+          <div className="App" >
         <div className="sideLeft">
           <div className="Logo">
             Logo
@@ -148,9 +170,9 @@ class Main extends Component {
           </header>
 
           <main>
-          
+
           <div className="files">
-                <table>
+                <table className="table">
                     <thead>
                       <tr>
                         <th>Folder/file name</th>
@@ -162,7 +184,7 @@ class Main extends Component {
                     {minaFiler}
                 </tbody>
                 </table>
-                
+
             </div>
 
             <div className="sidebarRight">
@@ -174,7 +196,7 @@ class Main extends Component {
                 <li> New Map </li>
                 <br />
                 <li> New Shared Map </li>
-                
+
             </ul>
             <p className="sideText">Choose your option</p>
             </div>
