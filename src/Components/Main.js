@@ -96,23 +96,33 @@ class Main extends Component {
         let fileName
         let date_input
         let datum
-
+        let size
+        let i
+        let newSize
         if(file[".tag"] === "failure"){
           return null
         }
         else {
+          
           fileName = file.metadata.name;
           date_input = new Date((file.metadata.client_modified));
           datum = new Date(date_input).toDateString();
+          
+          size = file.metadata.size;
+          i = Math.floor(Math.log(size) / Math.log(1024));
+          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
+          
         }
-        console.log('qw', file);
+        
         return (
           <tr>
             <td>
             <div style={{ display: 'flex' }}>
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
-              {datum}
+              {"Latest change: " + datum}
+              
+              {" Filesize: " + newSize}
             </div>
             </td> 
           </tr>
