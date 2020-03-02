@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
-<<<<<<< HEAD
-import LogOut from './LogOut';
-=======
+import LogOut from './LogOut'
 import { Link } from 'react-router-dom'
 import DropdownOptions from './DropdownOptions'
 import DeleteWindow from '../Components/DeleteWindow'
->>>>>>> 7b9f9b30c282648fe35c660fce1bbbb2d49babab
+import LogOut from './LogOut';
+import { Link } from 'react-router-dom'
+import DropdownOptions from './DropdownOptions'
+import DeleteWindow from '../Components/DeleteWindow'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
