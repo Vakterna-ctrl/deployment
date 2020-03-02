@@ -89,10 +89,12 @@ class Main extends Component {
         console.log('qw', file);
         return (
           <tr>
+            <td>
             <div style={{ display: 'flex' }}>
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
             </div>
+            </td> 
           </tr>
         )
       })
@@ -106,12 +108,15 @@ class Main extends Component {
           folderThumbnail = folderImg;
         return (
           <tr>
+          
+            <td>
             <div style={{ display: 'flex' }}>
-                <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
+            <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
                 <Link to={`/main${folder.path_display}`}>
-                  <td>{folder.name}</td>
+                  {folder.name}
                 </Link>
             </div>
+            </td>
           </tr>
         )
       }
