@@ -25,8 +25,8 @@ div{
     transition-timing-function: ease-in-out;
 }
 
-div:hover{
-    cursor: pointer;
+.bigBox:hover{
+    
     font-size: 25px;
 }
 

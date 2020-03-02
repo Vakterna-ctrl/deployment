@@ -17,7 +17,6 @@ class Main extends Component {
 
     componentDidMount() {
       let path = this.props.id;
-      console.log(path);
 
       const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       dbx.filesListFolder({ path: `/${path}` })
@@ -67,7 +66,7 @@ class Main extends Component {
                   {folders.map(folder => {
                       return (
                         <tr>
-                          <div  className="testing">
+                          <div>
                               <td>{folder.name}</td>
                           </div>
                         </tr>
