@@ -18,7 +18,6 @@ class Main extends Component {
 
         this.state = {
           folders: [],
-          thumbnail: {},
           files: [],
           URL: null
         }
@@ -82,6 +81,12 @@ class Main extends Component {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
         let fileName = file.metadata.name;
         console.log('qw', file);
+        // console.log('qw test', file['.tag']);
+        if (file['.tag'] === 'failure') {
+          return null
+        } else {
+          console.log('qw svar', 'Your are best');
+        }
 
         return (
           <tr>
