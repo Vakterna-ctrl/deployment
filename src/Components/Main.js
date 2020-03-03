@@ -21,6 +21,9 @@ class Main extends Component {
           show: false,
           files: [],
           URL: null,
+
+          filterFolders: '',
+          filterFiles: ''
         }
     }
     // delets files and closes delete window
@@ -36,7 +39,6 @@ class Main extends Component {
 
     componentDidMount() {
       // hämtar folders
-
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -88,6 +90,47 @@ class Main extends Component {
     render() {
       const { folders, files, URL } = this.state;
 
+      // let minaFiler = files.map(file => {
+
+      //   let image = `data:image/jpeg;base64,${file.thumbnail}`;
+
+      //   let fileName
+      //   let date_input
+      //   let datum
+      //   let size
+      //   let newSize
+      //   let i
+      //   if(file[".tag"] === "failure"){
+      //     return null
+      //   }
+      //   else {
+
+      //     fileName = file.metadata.name;
+      //     date_input = new Date((file.metadata.client_modified));
+      //     datum = new Date(date_input).toDateString();
+
+      //     size = file.metadata.size;
+      //     i = Math.floor(Math.log(size) / Math.log(1024));
+      //     newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
+
+      //   }
+      //   return (
+      //     <tr>
+      //       <td>
+      //       <div style={{ display: 'flex' }}>
+      //         <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+      //         <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
+
+      //         {" Latest change: " + datum}
+              
+      //         {" Filesize: " + newSize}
+      //       </div>
+      //       </td>
+      //     </tr>
+      //   )
+      // })
+
+
       let minaFiler = files.map(file => {
 
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
@@ -127,6 +170,8 @@ class Main extends Component {
           </tr>
         )
       })
+
+
 
       let minaFolders = folders.map(folder => {
         // render img icons to folders !
