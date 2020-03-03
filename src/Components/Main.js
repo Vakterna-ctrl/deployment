@@ -234,7 +234,7 @@ class Main extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> Upload File </li>
+                <li> <input type="files"/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br/>
