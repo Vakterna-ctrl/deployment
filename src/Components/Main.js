@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
+import { Link } from 'react-router-dom';
+
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
 
@@ -10,7 +12,6 @@ import '../Css/nav.css'
 import '../Css/UlItems.css'
 
 import folderImg from '../Img/folder-img.png';
-import { Link } from 'react-router-dom';
 
 class Main extends Component {
     constructor(props) {
@@ -79,7 +80,10 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    return this.setState({ filterFiles: e.target.value });
+    this.setState({ 
+      filterFolders: e.target.value, 
+      filterFiles: e.target.value 
+    });
   }
 
   downloadFile = (file) => {
@@ -93,47 +97,6 @@ class Main extends Component {
 
     render() {
       const { folders, files, URL, filterFolders, filterFiles } = this.state;
-
-      // let minaFiler = files.map(file => {
-
-      //   let image = `data:image/jpeg;base64,${file.thumbnail}`;
-
-      //   let fileName
-      //   let date_input
-      //   let datum
-      //   let size
-      //   let newSize
-      //   let i
-      //   if(file[".tag"] === "failure"){
-      //     return null
-      //   }
-      //   else {
-
-      //     fileName = file.metadata.name;
-      //     date_input = new Date((file.metadata.client_modified));
-      //     datum = new Date(date_input).toDateString();
-
-      //     size = file.metadata.size;
-      //     i = Math.floor(Math.log(size) / Math.log(1024));
-      //     newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
-
-      //   }
-      //   return (
-      //     <tr>
-      //       <td>
-      //       <div style={{ display: 'flex' }}>
-      //         <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-      //         <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
-
-      //         {" Latest change: " + datum}
-              
-      //         {" Filesize: " + newSize}
-      //       </div>
-      //       </td>
-      //     </tr>
-      //   )
-      // })
-
 
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
@@ -149,7 +112,6 @@ class Main extends Component {
           }
         }
       }).map(file => {
-
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
 
         let fileName
@@ -189,8 +151,21 @@ class Main extends Component {
       })
 
 
+      let minaFolders = folders.filter((searchFolders) => {
+        let search = filterFolders;
 
-      let minaFolders = folders.map(folder => {
+        if (!search) {
+          return searchFolders;
+        }
+        else {
+          if (searchFolders.name.toLowerCase().indexOf(search)) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        }
+      }).map(folder => {
         // render img icons to folders !
 
         const type = folder['.tag'];
@@ -242,8 +217,12 @@ class Main extends Component {
         <div className={"bigBox"}>
           <header>
             <h1>Project X</h1>
-              <input type="text" onChange={this.search_FOLDERS_FILES.bind(this)} placeholder="Search" />
-              <LogOut />
+              <input 
+                type="text" 
+                onChange={this.search_FOLDERS_FILES.bind(this)} 
+                placeholder="Search"
+              />
+              <LogOut/>
           </header>
 
           <main>
@@ -279,9 +258,7 @@ class Main extends Component {
                 <li> New Shared Map </li>
                 
             </ul>
-            <p className="sideText">Choose your option</p>
-
-            
+              <p className="sideText">Choose your option</p>
             </div>
           </main>
         </div>
