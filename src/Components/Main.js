@@ -78,6 +78,10 @@ class Main extends Component {
   }
   }
 
+  search_FOLDERS_FILES = (e) => {
+    return this.setState({ filterFiles: e.target.value });
+  }
+
   downloadFile = (file) => {
     this.dbx.filesGetThumbnail({"path": file})
       .then(res => {
@@ -88,7 +92,7 @@ class Main extends Component {
   }
 
     render() {
-      const { folders, files, URL } = this.state;
+      const { folders, files, URL, filterFolders, filterFiles } = this.state;
 
       // let minaFiler = files.map(file => {
 
@@ -131,7 +135,20 @@ class Main extends Component {
       // })
 
 
-      let minaFiler = files.map(file => {
+      let minaFiler = files.filter((searchFiles) => {
+        let search = filterFiles;
+        if (!search) {
+          return searchFiles;
+        }
+        else {
+          if (searchFiles.metadata.name.toLowerCase().indexOf(search) === -1) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        }
+      }).map(file => {
 
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
 
@@ -225,7 +242,7 @@ class Main extends Component {
         <div className={"bigBox"}>
           <header>
             <h1>Project X</h1>
-              <input placeholder="Search" type="text" />
+              <input type="text" onChange={this.search_FOLDERS_FILES.bind(this)} placeholder="Search" />
               <LogOut />
           </header>
 
