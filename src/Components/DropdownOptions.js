@@ -32,7 +32,6 @@ class DropdownOptions extends PureComponent{
     <div className="dropdown-list" onClick={this.onDeleteButtonClicked}>delete</div>
     <div className="dropdown-list">ladda upp</div>
     </div>
-
   </ClickedOutsideRemover>
   {deleteButtonClicked ?
    <DeleteWindow onCloseDeleteWindow={this.onCloseDeleteWindow} path={path} onDelete={onDelete} name={name}/>

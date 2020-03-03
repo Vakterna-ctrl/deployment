@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
+import CreateFolder from './CreateFolder'
+
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -21,18 +23,41 @@ class Main extends Component {
           show: false,
           files: [],
           URL: null,
-          
+          showCreateFolder: false,
+
         }
     }
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
-      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      dbx.filesDelete({path: path_delete})
+      this.dbx.filesDelete({path: path_delete})
       .then(response =>{
         let newFolder = folders.filter( folder => folder.name !== response.name)
         this.setState({folders: newFolder, deleteButtonClicked : false})
       })
+    }
+
+    //Create Folder
+    createFolder = (name) =>{
+      this.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
+      .then(response =>{
+        console.log(response)
+        let folder = {}
+        folder[".tag"] = "folder"
+        let newFolder = {...folder,...response.metadata}
+        let allFolders = [...this.state.folders, newFolder]
+        this.setState({folders: allFolders})
+      }).catch(response=>{
+        console.log(response)
+      })
+    }
+    //shows the window when click on create folder
+    onShowCreateFolder= () =>{
+      this.setState({showCreateFolder: true})
+    }
+    //closes the window when click on create folder
+    onCloseCreateFolder = () =>{
+      this.setState({showCreateFolder: false})
     }
 
     componentDidMount() {
@@ -75,6 +100,7 @@ class Main extends Component {
         this.setState({ files: res.entries });
       });
   }
+
   }
 
   downloadFile = (file) => {
@@ -87,7 +113,7 @@ class Main extends Component {
   }
 
     render() {
-      const { folders, files, URL } = this.state;
+      const { folders, files, URL, showCreateFolder } = this.state;
 
       let minaFiler = files.map(file => {
 
@@ -120,7 +146,7 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
               {" Latest change: " + datum}
-              
+
               {" Filesize: " + newSize}
             </div>
             </td>
@@ -211,15 +237,17 @@ class Main extends Component {
                 <li> Upload File </li>
                 <br />
                 <li> Upload Map </li>
-                <br />
-                <li> New Map </li>
+                <br/>
+                <li onClick={this.onShowCreateFolder}>
+                Create Folder
+                </li>
+                {showCreateFolder === true ?
+                <CreateFolder showCreateFolder={showCreateFolder} createFolder={this.createFolder} onCloseCreateFolder={this.onCloseCreateFolder}/>
+                : null}
                 <br />
                 <li> New Shared Map </li>
-                
             </ul>
             <p className="sideText">Choose your option</p>
-
-            
             </div>
           </main>
         </div>
