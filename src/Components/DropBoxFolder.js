@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
+import CreateFolder from './CreateFolder'
+
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -22,9 +24,13 @@ class DropBoxFolder extends Component {
           files: [],
           URL: null,
           links: [],
-
+          showCreateFolder: false,
         }
-    }
+  
+        this.inputRef = React.createRef()
+        }
+
+    
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
@@ -35,6 +41,51 @@ class DropBoxFolder extends Component {
         this.setState({folders: newFolder, deleteButtonClicked : false})
       })
     }
+
+
+    createFolder = (name) =>{
+      let path = this.props.match.params.path
+      this.dbx.filesCreateFolderV2({path: `/${path}/${name}`, autorename:true })
+      .then(response =>{
+        console.log(response)
+        let folder = {}
+        folder[".tag"] = "folder"
+        let newFolder = {...folder,...response.metadata}
+        let allFolders = [...this.state.folders, newFolder]
+        this.setState({folders: allFolders})
+      }).catch(response=>{
+        console.log(response)
+      })
+    }
+    //shows the window when click on create folder
+    onShowCreateFolder= () =>{
+      this.setState({showCreateFolder: true})
+    }
+    //closes the window when click on create folder
+    onCloseCreateFolder = () =>{
+      this.setState({showCreateFolder: false})
+    }
+
+    createFile = () =>{
+      this.inputRef.current.click();
+    }
+    onChangeFile = () =>{
+      let file = this.inputRef.current.files[0]
+      if(file){
+        this.dbx.filesUpload({contents:file, path:`/${this.props.match.params.path}/${file.name}`, autorename: true})
+        .then(response=>{
+          console.log(response)
+          let file = {}
+          file[".tag"] = "success"
+          let createFile = {file,metadata: response}
+          let uniteFiles = [...this.state.files, createFile]
+          this.setState({uniteFiles})
+        }).catch(response=>{
+          console.log(response)
+        })
+      }
+    }
+
     onGoBack = () =>{
       const{links} = this.state
       let newLink = links[links.length-2]
@@ -77,19 +128,19 @@ class DropBoxFolder extends Component {
           this.setState({ files: res.entries });
         });
     }
+  
 
 
     componentDidUpdate(prevProps, prevState) {
       let path = this.props.match.params.path
       let links = path.split("/")
-      console.log(links)
+
       let newLinks = []
       links.reduce(((acc,currentLink)=>{
         let a = acc+"/"+currentLink
         newLinks.push(acc+"/"+currentLink)
         return acc+"/"+currentLink
       }),"")
-      console.log(path)
 
       if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
@@ -118,8 +169,9 @@ class DropBoxFolder extends Component {
   }
 
     render() {
-      const { folders, files, URL,links } = this.state;
-      console.log(links)
+
+      const { folders, files, URL,links, showCreateFolder } = this.state;
+
 
       let minaFiler = files.map(file => {
 
@@ -131,6 +183,7 @@ class DropBoxFolder extends Component {
         let i
         let newSize
 
+
         if(file[".tag"] === "failure"){
           return null
         }
@@ -140,9 +193,11 @@ class DropBoxFolder extends Component {
           datum = new Date(date_input).toDateString();
 
 
+
           size = file.metadata.size;
           i = Math.floor(Math.log(size) / Math.log(1024));
           newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
+
         }
         return (
           <tr>
@@ -152,6 +207,7 @@ class DropBoxFolder extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
               <span> {" Latest change: " + datum} </span>
               <span> {" Filesize: " + newSize} </span>
+
             </div>
             </td>
           </tr>
@@ -244,11 +300,22 @@ class DropBoxFolder extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> Upload File </li>
+
+                <li> New Map </li>
+                  <br/>
+                <li onClick={this.createFile}>
+                Upload File
+                <input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br />
-                <li> New Map </li>
+                <li onClick={this.onShowCreateFolder}>
+                Create Folder
+                </li>
+                {showCreateFolder === true ?
+                <CreateFolder showCreateFolder={showCreateFolder} createFolder={this.createFolder} onCloseCreateFolder={this.onCloseCreateFolder}/>
+                : null}
+
                 <br />
                 <li> New Shared Map </li>
                 <br />

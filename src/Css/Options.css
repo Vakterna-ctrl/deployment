@@ -15,8 +15,8 @@
   background-color: white;
   z-index: 1;
   left:-50px;
-  
 }
+
 
 
 
@@ -67,4 +67,10 @@
   padding: 10px 20px;
   background-color: blue;
   border-radius: 10px;
+
+  cursor: pointer;
+}
+.delete:hover{
+  background-color: lightblue;
+
 }
