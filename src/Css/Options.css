@@ -15,7 +15,11 @@
   background-color: white;
   z-index: 1;
   left:-50px;
+  
 }
+
+
+
 .dropdown-content{
   margin: 10px;
 }

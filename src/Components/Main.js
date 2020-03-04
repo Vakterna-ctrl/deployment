@@ -98,6 +98,7 @@ class Main extends Component {
         let size
         let newSize
         let i
+
         if(file[".tag"] === "failure"){
           return null
         }
@@ -119,9 +120,9 @@ class Main extends Component {
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
-              {" Latest change: " + datum}
+              <span> {" Latest change: " + datum} </span>
               
-              {" Filesize: " + newSize}
+              <span> {" Filesize: " + newSize} </span>
             </div>
             </td>
           </tr>
