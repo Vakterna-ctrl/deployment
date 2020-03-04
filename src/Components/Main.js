@@ -326,7 +326,7 @@ class Main extends Component {
                 <li> New Shared Map </li>
             </ul>
               <p className="sideText">Choose your option</p>
-            <p className="sideText">Choose your option</p>
+            
             </div>
           </main>
         </div>
