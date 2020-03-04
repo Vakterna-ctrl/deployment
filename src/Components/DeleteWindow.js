@@ -2,10 +2,12 @@ import React, { Component, PureComponent } from 'react'
 import '../Css/Options.css'
 import ReactDom from 'react-dom'
 
-function DeleteWindow({name,onCloseDeleteWindow,path,onDelete}){
+function DeleteWindow({name,onCloseDeleteWindow,path,onDelete,closeOnDelete}){
   function deleteOnClick(path_folder){
     onDelete(path_folder)
+    closeOnDelete()
   }
+  console.log(path)
 
   return ReactDom.createPortal(
   <div className="darkenOutArea">
@@ -19,8 +21,6 @@ function DeleteWindow({name,onCloseDeleteWindow,path,onDelete}){
   </div>
   </div>,
   document.querySelector('#deletewindow')
-
-
   )
 
 }
