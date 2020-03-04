@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import { Dropbox } from "dropbox";
+import { Link } from 'react-router-dom';
+
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
 import CreateFolder from './CreateFolder'
@@ -13,7 +15,6 @@ import '../Css/nav.css'
 import '../Css/UlItems.css'
 
 import folderImg from '../Img/folder-img.png';
-import { Link } from 'react-router-dom';
 
 class Main extends Component {
     constructor(props) {
@@ -24,6 +25,10 @@ class Main extends Component {
           show: false,
           files: [],
           URL: null,
+
+          filterFolders: '',
+          filterFiles: '',
+
           showCreateFolder: false,
         }
         this.inputRef = React.createRef()
@@ -92,7 +97,6 @@ class Main extends Component {
 
     componentDidMount() {
       // hämtar folders
-
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -132,6 +136,13 @@ class Main extends Component {
   }
   }
 
+  search_FOLDERS_FILES = (e) => {
+    this.setState({ 
+      filterFolders: e.target.value, 
+      filterFiles: e.target.value 
+    });
+  }
+
   downloadFile = (file) => {
     this.dbx.filesGetThumbnail({"path": file})
       .then(res => {
@@ -142,12 +153,24 @@ class Main extends Component {
   }
 
     render() {
-      const { folders, files, URL, showCreateFolder } = this.state;
+      const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
 
-
-      let minaFiler = files.map(file => {
-
+      let minaFiler = files.filter((searchFiles) => {
+        let search = filterFiles;
+        if (!search) {
+          return searchFiles;
+        }
+        else {
+          if (searchFiles.metadata.name.toLowerCase().indexOf(search) === -1) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        }
+      }).map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
+
         let fileName
         let date_input
         let datum
@@ -166,7 +189,7 @@ class Main extends Component {
 
           size = file.metadata.size;
           i = Math.floor(Math.log(size) / Math.log(1024));
-          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
+          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
 
         }
 
@@ -186,9 +209,22 @@ class Main extends Component {
         )
       })
 
-      
 
-      let minaFolders = folders.map(folder => {
+      let minaFolders = folders.filter((searchFolders) => {
+        let search = filterFolders;
+
+        if (!search) {
+          return searchFolders;
+        }
+        else {
+          if (searchFolders.name.toLowerCase().indexOf(search)) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        }
+      }).map(folder => {
         // render img icons to folders !
 
         const type = folder['.tag'];
@@ -243,8 +279,12 @@ class Main extends Component {
         <div className={"bigBox"}>
           <header>
             <h1>Project X</h1>
-              <input placeholder="Search" type="text" />
-              <LogOut />
+              <input 
+                type="text" 
+                onChange={this.search_FOLDERS_FILES.bind(this)} 
+                placeholder="Search"
+              />
+              <LogOut/>
           </header>
 
           <main>
@@ -285,8 +325,8 @@ class Main extends Component {
                 <br />
                 <li> New Shared Map </li>
             </ul>
+              <p className="sideText">Choose your option</p>
             <p className="sideText">Choose your option</p>
-
             </div>
           </main>
         </div>
