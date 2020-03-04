@@ -143,10 +143,15 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    this.setState({ 
-      filterFolders: e.target.value, 
-      filterFiles: e.target.value 
-    });
+    // this.setState({ 
+    //   filterFolders: e.target.value, 
+    //   filterFiles: e.target.value 
+    // });
+
+    this.dbx.filesSearch({ path: '' ,query: e.target.value})
+    .then(res => {
+      console.log('res', res);
+    })
   }
 
   downloadFile = (file) => {
@@ -164,16 +169,26 @@ class Main extends Component {
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
         let name
+<<<<<<< HEAD
+=======
+
+        console.log('Search40', searchFiles['.tag']);
+
+>>>>>>> b288537ed79ec3bd1c3a7e3092f3ea692d230121
         if(searchFiles[".tag"] === "failure"){
           return null
         } else {
           name = searchFiles.metadata.name;
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b288537ed79ec3bd1c3a7e3092f3ea692d230121
         if (!search) {
           return searchFiles;
         }
         else {
-          if (searchFiles.metadata.name.toLowerCase().indexOf(search) === -1) {
+          if (name.toLowerCase().indexOf(search) === -1) {
             return false;
           }
           else {
