@@ -27,6 +27,8 @@ class DropBoxFolder extends Component {
           showCreateFolder: false,
 
         }
+        this.inputRef = React.createRef()
+
     }
     // delets files and closes delete window
     onDelete = (path_delete) =>{
@@ -60,6 +62,26 @@ class DropBoxFolder extends Component {
     //closes the window when click on create folder
     onCloseCreateFolder = () =>{
       this.setState({showCreateFolder: false})
+    }
+
+    createFile = () =>{
+      this.inputRef.current.click();
+    }
+    onChangeFile = () =>{
+      let file = this.inputRef.current.files[0]
+      if(file){
+        this.dbx.filesUpload({contents:file, path:`/${this.props.match.params.path}/${file.name}`, autorename: true})
+        .then(response=>{
+          console.log(response)
+          let file = {}
+          file[".tag"] = "success"
+          let createFile = {file,metadata: response}
+          let uniteFiles = [...this.state.files, createFile]
+          this.setState({uniteFiles})
+        }).catch(response=>{
+          console.log(response)
+        })
+      }
     }
 
     onGoBack = () =>{
@@ -144,7 +166,6 @@ class DropBoxFolder extends Component {
 
     render() {
       const { folders, files, URL,links, showCreateFolder } = this.state;
-      console.log(links)
 
       let minaFiler = files.map(file => {
 
@@ -261,7 +282,9 @@ class DropBoxFolder extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> Upload File </li>
+                <li onClick={this.createFile}>
+                Upload File
+                <input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br />

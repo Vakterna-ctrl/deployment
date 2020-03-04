@@ -63,4 +63,8 @@
   padding: 10px 20px;
   background-color: blue;
   border-radius: 10px;
+  cursor: pointer;
+}
+.delete:hover{
+  background-color: lightblue;
 }

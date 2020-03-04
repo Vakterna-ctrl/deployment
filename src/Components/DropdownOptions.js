@@ -7,7 +7,8 @@ class DropdownOptions extends PureComponent{
   constructor(props){
     super(props)
     this.state = {
-      deleteButtonClicked: false
+      deleteButtonClicked: false,
+
     }
   }
 
@@ -19,12 +20,16 @@ class DropdownOptions extends PureComponent{
   onCloseDeleteWindow = () =>{
     this.setState({deleteButtonClicked: false})
   }
+  closeOnDelete = () =>{
+    this.setState({deleteButtonClicked: false})
+  }
 
   render(){
   const{onDelete,path,name} = this.props
   const{deleteButtonClicked} = this.state
+  console.log(deleteButtonClicked)
   return(
-  <div>
+  <>
   <div className="dropdown">
   <span>...</span>
   <ClickedOutsideRemover>
@@ -33,11 +38,11 @@ class DropdownOptions extends PureComponent{
     <div className="dropdown-list">ladda upp</div>
     </div>
   </ClickedOutsideRemover>
+  </div>
   {deleteButtonClicked ?
-   <DeleteWindow onCloseDeleteWindow={this.onCloseDeleteWindow} path={path} onDelete={onDelete} name={name}/>
+   <DeleteWindow onCloseDeleteWindow={this.onCloseDeleteWindow} closeOnDelete={this.closeOnDelete} path={path} onDelete={onDelete} name={name}/>
    : null}
-  </div>
-  </div>
+  </>
 
 )}}
 

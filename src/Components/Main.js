@@ -26,6 +26,7 @@ class Main extends Component {
           showCreateFolder: false,
 
         }
+        this.inputRef = React.createRef()
     }
     // delets files and closes delete window
     onDelete = (path_delete) =>{
@@ -33,7 +34,7 @@ class Main extends Component {
       this.dbx.filesDelete({path: path_delete})
       .then(response =>{
         let newFolder = folders.filter( folder => folder.name !== response.name)
-        this.setState({folders: newFolder, deleteButtonClicked : false})
+        this.setState({folders: newFolder})
       })
     }
 
@@ -41,7 +42,6 @@ class Main extends Component {
     createFolder = (name) =>{
       this.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
       .then(response =>{
-        console.log(response)
         let folder = {}
         folder[".tag"] = "folder"
         let newFolder = {...folder,...response.metadata}
@@ -59,10 +59,28 @@ class Main extends Component {
     onCloseCreateFolder = () =>{
       this.setState({showCreateFolder: false})
     }
+    createFile = () =>{
+      this.inputRef.current.click();
+    }
+    onChangeFile = () =>{
+      let file = this.inputRef.current.files[0]
+      if(file){
+        this.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
+        .then(response=>{
+          console.log(response)
+          let file = {}
+          file[".tag"] = "success"
+          let createFile = {file,metadata: response}
+          let uniteFiles = [...this.state.files, createFile]
+          this.setState({uniteFiles})
+        }).catch(response=>{
+          console.log(response)
+        })
+      }
+    }
 
     componentDidMount() {
       // hämtar folders
-
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -172,6 +190,7 @@ class Main extends Component {
                 </Link>
 
                 <td className="dropdownList">
+
                 <DropdownOptions
                   onDelete={this.onDelete}
                   path={folder.path_display}
@@ -234,7 +253,7 @@ class Main extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> <input type="files"/> </li>
+                <li onClick={this.createFile}>Upload File<input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br/>
