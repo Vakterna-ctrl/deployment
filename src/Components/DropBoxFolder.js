@@ -183,7 +183,6 @@ class DropBoxFolder extends Component {
         let i
         let newSize
 
-
         if(file[".tag"] === "failure"){
           return null
         }

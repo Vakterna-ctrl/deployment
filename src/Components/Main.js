@@ -59,10 +59,15 @@ class Main extends Component {
     //shows the window when click on create folder
     onShowCreateFolder= () =>{
       this.setState({showCreateFolder: true})
+      
     }
     //closes the window when click on create folder
     onCloseCreateFolder = () =>{
       this.setState({showCreateFolder: false})
+    }
+
+    onUpdateName = (e) => {
+      this.setState({folders: e.target.value})
     }
 
     // delets files and closes delete window
@@ -77,6 +82,7 @@ class Main extends Component {
     }
     createFile = () =>{
       this.inputRef.current.click();
+      
     }
     onChangeFile = () =>{
       let file = this.inputRef.current.files[0]
@@ -157,6 +163,12 @@ class Main extends Component {
 
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
+        let name
+        if(searchFiles[".tag"] === "failure"){
+          return null
+        } else {
+          name = searchFiles.metadata.name;
+        }
         if (!search) {
           return searchFiles;
         }
@@ -200,9 +212,9 @@ class Main extends Component {
               <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
-              {" Latest change: " + datum}
+              <span>{" Latest change: " + datum}</span>
 
-              {" Filesize: " + newSize}
+              <span>{" Filesize: " + newSize}</span>
             </div>
             </td>
           </tr>
@@ -241,10 +253,9 @@ class Main extends Component {
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
                 </Link>
-
                 <td className="dropdownList">
 
-
+                <input  type="text" value={folder.name} minLength="1" maxLength="40" onChange={this.onUpdateName.bind(this)}/>
                 <DropdownOptions
                   onDelete={this.onDelete}
                   path={folder.path_display}
