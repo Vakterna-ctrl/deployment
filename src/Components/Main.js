@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
+import CreateFolder from './CreateFolder'
+
+
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -24,9 +27,44 @@ class Main extends Component {
           URL: null,
 
           filterFolders: '',
-          filterFiles: ''
+          filterFiles: '',
+
+          showCreateFolder: false,
         }
+        this.inputRef = React.createRef()
     }
+    // delets files and closes delete window
+    onDelete = (path_delete) =>{
+      const{folders} = this.state
+      this.dbx.filesDelete({path: path_delete})
+      .then(response =>{
+        let newFolder = folders.filter( folder => folder.name !== response.name)
+        this.setState({folders: newFolder})
+      })
+    }
+
+    //Create Folder
+    createFolder = (name) =>{
+      this.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
+      .then(response =>{
+        let folder = {}
+        folder[".tag"] = "folder"
+        let newFolder = {...folder,...response.metadata}
+        let allFolders = [...this.state.folders, newFolder]
+        this.setState({folders: allFolders})
+      }).catch(response=>{
+        console.log(response)
+      })
+    }
+    //shows the window when click on create folder
+    onShowCreateFolder= () =>{
+      this.setState({showCreateFolder: true})
+    }
+    //closes the window when click on create folder
+    onCloseCreateFolder = () =>{
+      this.setState({showCreateFolder: false})
+    }
+
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
@@ -34,8 +72,27 @@ class Main extends Component {
       dbx.filesDelete({path: path_delete})
       .then(response =>{
         let newFolder = folders.filter( folder => folder.name !== response.name)
-        this.setState({folders: newFolder, deleteButtonClicked : false})
+        this.setState({folders: newFolder })
       })
+    }
+    createFile = () =>{
+      this.inputRef.current.click();
+    }
+    onChangeFile = () =>{
+      let file = this.inputRef.current.files[0]
+      if(file){
+        this.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
+        .then(response=>{
+          console.log(response)
+          let file = {}
+          file[".tag"] = "success"
+          let createFile = {file,metadata: response}
+          let uniteFiles = [...this.state.files, createFile]
+          this.setState({uniteFiles})
+        }).catch(response=>{
+          console.log(response)
+        })
+      }
     }
 
     componentDidMount() {
@@ -96,7 +153,7 @@ class Main extends Component {
   }
 
     render() {
-      const { folders, files, URL, filterFolders, filterFiles } = this.state;
+      const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
 
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
@@ -120,6 +177,7 @@ class Main extends Component {
         let size
         let newSize
         let i
+
         if(file[".tag"] === "failure"){
           return null
         }
@@ -134,6 +192,7 @@ class Main extends Component {
           newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
 
         }
+
         return (
           <tr>
             <td>
@@ -142,7 +201,7 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
               {" Latest change: " + datum}
-              
+
               {" Filesize: " + newSize}
             </div>
             </td>
@@ -177,12 +236,15 @@ class Main extends Component {
           <tr>
             <td>
             <div style={{ display: 'flex' }}>
+
             <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
                 </Link>
 
                 <td className="dropdownList">
+
+
                 <DropdownOptions
                   onDelete={this.onDelete}
                   path={folder.path_display}
@@ -249,22 +311,28 @@ class Main extends Component {
 
             <div className="sidebarRight">
             <ul>
-                <li> Upload File </li>
+
+                <li onClick={this.createFile}>Upload File<input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
-                <br />
-                <li> New Map </li>
+                <br/>
+                <li onClick={this.onShowCreateFolder}>
+                Create Folder
+                </li>
+                {showCreateFolder === true ?
+                <CreateFolder showCreateFolder={showCreateFolder} createFolder={this.createFolder} onCloseCreateFolder={this.onCloseCreateFolder}/>
+                : null}
                 <br />
                 <li> New Shared Map </li>
-                
             </ul>
               <p className="sideText">Choose your option</p>
+            <p className="sideText">Choose your option</p>
             </div>
           </main>
         </div>
     </div>
       )
     }
-}
-
+  }
+    
 export default Main
