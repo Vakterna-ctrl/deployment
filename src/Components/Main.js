@@ -144,15 +144,28 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    // this.setState({ 
-    //   filterFolders: e.target.value, 
-    //   filterFiles: e.target.value 
-    // });
+    /*this.setState({ 
+      filterFolders: e.target.value, 
+      filterFiles: e.target.value 
+    });*/
 
     this.dbx.filesSearch({ path: '' ,query: e.target.value})
     .then(res => {
-      console.log('res', res);
-    })
+      let entries = res.matches.map(x => x.metadata);
+
+      console.log('HEJ2', entries);
+      this.setState({ folders: entries });
+
+      entries = entries
+        .filter(x => x[".tag"] === "file")
+        .map((x) => ({ path: x.path_display }));
+      return this.dbx.filesGetThumbnailBatch({
+        entries: entries,
+      });
+      })
+      .then((res) => {
+        this.setState({ files: res.entries });
+      });
   }
 
   downloadFile = (file) => {
@@ -166,6 +179,8 @@ class Main extends Component {
 
     render() {
       const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
+
+      console.log(files, folders);
 
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;

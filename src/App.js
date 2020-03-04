@@ -18,8 +18,8 @@ function App() {
         <Route exact path="/" component={LogIn} />
         <Route path="/auth" component={GetToken} />
 
-        <Route exact path="/main" component={Main} />
-        <Route path="/main/:path+" component={DropBoxFolder} />
+        <Route path="/main" component={Main} />
+        {/* <Route path="/main/:path+" component={DropBoxFolder} /> */}
 
         {/* <Route path="/folder/:path" render={(props) => <DropBoxFolder id={props.match.params.path} />} /> */}
       </Router>
