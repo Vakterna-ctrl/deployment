@@ -137,10 +137,15 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    this.setState({ 
-      filterFolders: e.target.value, 
-      filterFiles: e.target.value 
-    });
+    // this.setState({ 
+    //   filterFolders: e.target.value, 
+    //   filterFiles: e.target.value 
+    // });
+
+    this.dbx.filesSearch({ path: '' ,query: e.target.value})
+    .then(res => {
+      console.log('res', res);
+    })
   }
 
   downloadFile = (file) => {
