@@ -271,7 +271,7 @@ class DropBoxFolder extends Component {
 
               {links.map(link => {
 
-                return (<span><Link style={{color:'white'}} to={`/main${link}`}>{link}</Link></span>)
+                return (<span className="pathing"><Link style={{color:'white'}} to={`/main${link}`}>{link}</Link></span>)
               })}
 
           </header>
