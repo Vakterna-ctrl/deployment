@@ -70,6 +70,7 @@ class Main extends Component {
       this.setState({folders: e.target.value})
     }
 
+   
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
@@ -169,21 +170,13 @@ class Main extends Component {
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
         let name
-<<<<<<< HEAD
-=======
 
-        console.log('Search40', searchFiles['.tag']);
-
->>>>>>> b288537ed79ec3bd1c3a7e3092f3ea692d230121
         if(searchFiles[".tag"] === "failure"){
           return null
         } else {
           name = searchFiles.metadata.name;
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> b288537ed79ec3bd1c3a7e3092f3ea692d230121
         if (!search) {
           return searchFiles;
         }
@@ -268,9 +261,10 @@ class Main extends Component {
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
                 </Link>
+                <input  type="text" value={folder.name}  onChange={this.onUpdateName.bind(this)}/>
+                <button onClick={this.onUpdateName.bind(this)}>Click</button>
                 <td className="dropdownList">
 
-                <input  type="text" value={folder.name} minLength="1" maxLength="40" onChange={this.onUpdateName.bind(this)}/>
                 <DropdownOptions
                   onDelete={this.onDelete}
                   path={folder.path_display}
