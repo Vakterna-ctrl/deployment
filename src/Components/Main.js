@@ -137,10 +137,15 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    this.setState({ 
-      filterFolders: e.target.value, 
-      filterFiles: e.target.value 
-    });
+    // this.setState({ 
+    //   filterFolders: e.target.value, 
+    //   filterFiles: e.target.value 
+    // });
+
+    this.dbx.filesSearch({ path: '' ,query: e.target.value})
+    .then(res => {
+      console.log('res', res);
+    })
   }
 
   downloadFile = (file) => {
@@ -157,11 +162,21 @@ class Main extends Component {
 
       let minaFiler = files.filter((searchFiles) => {
         let search = filterFiles;
+        let name
+
+        console.log('Search40', searchFiles['.tag']);
+
+        if(searchFiles[".tag"] === "failure"){
+          return null
+        } else {
+          name = searchFiles.metadata.name;
+        }
+
         if (!search) {
           return searchFiles;
         }
         else {
-          if (searchFiles.metadata.name.toLowerCase().indexOf(search) === -1) {
+          if (name.toLowerCase().indexOf(search) === -1) {
             return false;
           }
           else {
