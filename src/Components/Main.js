@@ -67,8 +67,12 @@ class Main extends Component {
       this.setState({showCreateFolder: false})
     }
 
-    onUpdateName = e => {
+    updateFolderName = e => {
       this.setState({ folderRename: e.target.value });
+    }
+
+    updateFileName = e => {
+      this.setState({ fileRename: e.target.value });
     }
 
     // delets files and closes delete window
@@ -83,7 +87,6 @@ class Main extends Component {
     }
     createFile = () =>{
       this.inputRef.current.click();
-      
     }
     onChangeFile = () =>{
       let file = this.inputRef.current.files[0]
@@ -185,6 +188,22 @@ class Main extends Component {
     })
   }
 
+  renameFiles = (path) => {
+    const newName = this.state.fileRename;
+
+    let splitPath = path.split(".")
+    let fileType = splitPath[1];
+
+    this.dbx.filesMoveV2({
+      "from_path": path,
+      "to_path": `/${newName}.${fileType}`,
+    })
+    .then(res => {
+      console.log('rename', res);
+      console.log('rename', window.location.pathname);
+    })
+  }
+
 
     render() {
       const { folders, files, URL, showCreateFolder } = this.state;
@@ -224,8 +243,10 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
               <span>{" Latest change: " + datum}</span>
-
               <span>{" Filesize: " + newSize}</span>
+
+              <input type="text" onChange={this.updateFileName.bind(this)}/>
+              <button onClick={() => this.renameFiles(file.metadata.path_display)}>Rename</button>
             </div>
             </td>
           </tr>
@@ -251,7 +272,7 @@ class Main extends Component {
               {folder.name}
             </Link>
 
-                <input type="text" onChange={this.onUpdateName.bind(this)}/>
+                <input type="text" onChange={this.updateFolderName.bind(this)}/>
                 <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
 
                 <td className="dropdownList">
