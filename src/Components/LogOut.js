@@ -24,7 +24,7 @@ class LogOut extends Component {
 
         return (
             <>
-                <button onClick={this.logOut}>Log out</button>
+                <button className="buttonField" onClick={this.logOut}>Log out</button>
             </>
         )
     }
