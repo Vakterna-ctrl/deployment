@@ -265,7 +265,7 @@ class Main extends Component {
           <div className="App" >
         
           <LeftNav />
-
+          <p>test</p>
         <div className={"bigBox"}>
           <header>
             <h1>Project X</h1>
