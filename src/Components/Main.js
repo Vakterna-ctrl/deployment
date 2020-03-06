@@ -26,12 +26,13 @@ class Main extends Component {
           files: [],
           URL: null,
 
-          filterFolders: '',
-          filterFiles: '',
+          folderRename: '',
+          fileRename: '',
 
           showCreateFolder: false,
         }
-        this.inputRef = React.createRef()
+        this.inputRef = React.createRef();
+        this.renameRef = React.createRef();
     }
     // delets files and closes delete window
     onDelete = (path_delete) =>{
@@ -66,11 +67,14 @@ class Main extends Component {
       this.setState({showCreateFolder: false})
     }
 
-    onUpdateName = (e) => {
-      this.setState({folders: e.target.value})
+    updateFolderName = e => {
+      this.setState({ folderRename: e.target.value });
     }
 
-   
+    updateFileName = e => {
+      this.setState({ fileRename: e.target.value });
+    }
+
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
@@ -83,7 +87,6 @@ class Main extends Component {
     }
     createFile = () =>{
       this.inputRef.current.click();
-      
     }
     onChangeFile = () =>{
       let file = this.inputRef.current.files[0]
@@ -144,11 +147,6 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    /*this.setState({ 
-      filterFolders: e.target.value, 
-      filterFiles: e.target.value 
-    });*/
-
     this.dbx.filesSearch({ path: '' ,query: e.target.value})
     .then(res => {
       let entries = res.matches.map(x => x.metadata);
@@ -176,34 +174,43 @@ class Main extends Component {
         this.setState({ URL: objURL });
       });
   }
+  
+  renameFolders = (path) => {
+    const newName = this.state.folderRename;
+
+    this.dbx.filesMoveV2({
+      "from_path": path,
+      "to_path": `/${newName}`,
+    })
+    .then(res => {
+      console.log('rename', res);
+      console.log('rename', window.location.pathname);
+    })
+  }
+
+  renameFiles = (path) => {
+    const newName = this.state.fileRename;
+
+    let splitPath = path.split(".")
+    let fileType = splitPath[1];
+
+    this.dbx.filesMoveV2({
+      "from_path": path,
+      "to_path": `/${newName}.${fileType}`,
+    })
+    .then(res => {
+      console.log('rename', res);
+      console.log('rename', window.location.pathname);
+    })
+  }
+
 
     render() {
-      const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
+      const { folders, files, URL, showCreateFolder } = this.state;
 
       console.log(files, folders);
 
-      let minaFiler = files.filter((searchFiles) => {
-        let search = filterFiles;
-        let name
-
-        if(searchFiles[".tag"] === "failure"){
-          return null
-        } else {
-          name = searchFiles.metadata.name;
-        }
-
-        if (!search) {
-          return searchFiles;
-        }
-        else {
-          if (name.toLowerCase().indexOf(search) === -1) {
-            return false;
-          }
-          else {
-            return true;
-          }
-        }
-      }).map(file => {
+      let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
 
         let fileName
@@ -236,8 +243,10 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
               <span>{" Latest change: " + datum}</span>
-
               <span>{" Filesize: " + newSize}</span>
+
+              <input type="text" onChange={this.updateFileName.bind(this)}/>
+              <button onClick={() => this.renameFiles(file.metadata.path_display)}>Rename</button>
             </div>
             </td>
           </tr>
@@ -245,21 +254,7 @@ class Main extends Component {
       })
 
 
-      let minaFolders = folders.filter((searchFolders) => {
-        let search = filterFolders;
-
-        if (!search) {
-          return searchFolders;
-        }
-        else {
-          if (searchFolders.name.toLowerCase().indexOf(search)) {
-            return false;
-          }
-          else {
-            return true;
-          }
-        }
-      }).map(folder => {
+      let minaFolders = folders.map(folder => {
         // render img icons to folders !
 
         const type = folder['.tag'];
@@ -271,21 +266,22 @@ class Main extends Component {
           <tr>
             <td>
             <div style={{ display: 'flex' }}>
-
             <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-                <Link to={`/main${folder.path_display}`}>
-                  {folder.name}
-                </Link>
-                <input  type="text" value={folder.name}  onChange={this.onUpdateName.bind(this)}/>
-                <button onClick={this.onUpdateName.bind(this)}>Click</button>
-                <td className="dropdownList">
 
-                <DropdownOptions
-                  onDelete={this.onDelete}
-                  path={folder.path_display}
-                  name={folder.name}
+            <Link to={`/main${folder.path_display}`}>
+              {folder.name}
+            </Link>
+
+                <input type="text" onChange={this.updateFolderName.bind(this)}/>
+                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
+
+                <td className="dropdownList">
+                  <DropdownOptions
+                    onDelete={this.onDelete}
+                    path={folder.path_display}
+                    name={folder.name}
                   />
-                  </td>
+                </td>
             </div>
             </td>
           </tr>
