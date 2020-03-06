@@ -23,12 +23,13 @@ class Main extends Component {
           files: [],
           URL: null,
 
-          filterFolders: '',
-          filterFiles: '',
+          folderRename: '',
+          fileRename: '',
 
           showCreateFolder: false,
         }
-        this.inputRef = React.createRef()
+        this.inputRef = React.createRef();
+        this.renameRef = React.createRef();
     }
     // delets files and closes delete window
     onDelete = (path_delete) =>{
@@ -64,6 +65,13 @@ class Main extends Component {
 
     onUpdateName = (e) => {
       // this.setState({folders: e.target.value})
+    }
+    updateFolderName = e => {
+      this.setState({ folderRename: e.target.value });
+    }
+
+    updateFileName = e => {
+      this.setState({ fileRename: e.target.value });
 
     }
 
@@ -97,7 +105,7 @@ class Main extends Component {
     }
 
     componentDidMount() {
-      // hämtar folders
+
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -137,11 +145,6 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    /*this.setState({ 
-      filterFolders: e.target.value, 
-      filterFiles: e.target.value 
-    });*/
-
     this.dbx.filesSearch({ path: '' ,query: e.target.value})
     .then(res => {
       let entries = res.matches.map(x => x.metadata);
@@ -167,9 +170,42 @@ class Main extends Component {
         this.setState({ URL: objURL });
       });
   }
+  
+  renameFolders = (path) => {
+    const newName = this.state.folderRename;
+
+    this.dbx.filesMoveV2({
+      "from_path": path,
+      "to_path": `/${newName}`,
+    })
+    .then(res => {
+      console.log('rename', res);
+      console.log('rename', window.location.pathname);
+    })
+  }
+
+  renameFiles = (path) => {
+    const newName = this.state.fileRename;
+
+
+    let splitPath = path.split(".")
+    let fileType = splitPath[1];
+
+    this.dbx.filesMoveV2({
+      "from_path": path,
+      "to_path": `/${newName}.${fileType}`,
+    })
+    .then(res => {
+      console.log('rename', res);
+      console.log('rename', window.location.pathname);
+    })
+  }
+
 
     render() {
-      const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
+      const { folders, files, URL, showCreateFolder } = this.state;
+
+      console.log(files, folders);
 
       let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
@@ -194,7 +230,7 @@ class Main extends Component {
           i = Math.floor(Math.log(size) / Math.log(1024));
           newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
         }
-
+      
         return (
           <tr>
             <td>
@@ -204,12 +240,15 @@ class Main extends Component {
 
               <span>{" Latest change: " + datum}</span>
               <span>{" Filesize: " + newSize}</span>
+
+              <input type="text" onChange={this.updateFileName.bind(this)}/>
+              <button onClick={() => this.renameFiles(file.metadata.path_display)}>Rename</button>
             </div>
             </td>
           </tr>
         )
       })
-
+    
       let minaFolders = folders.map(folder => {
         // render img icons to folders !
         const type = folder['.tag'];
@@ -222,26 +261,28 @@ class Main extends Component {
             <td>
             <div style={{ display: 'flex' }}>
             <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-                <Link to={`/main${folder.path_display}`}>
-                  {folder.name}
-                </Link>
-                <input  type="text" value={folder.name}  onChange={this.onUpdateName.bind(this)}/>
-                <button onClick={this.onUpdateName.bind(this)}>Click</button>
-                <td className="dropdownList">
 
-                <DropdownOptions
-                  onDelete={this.onDelete}
-                  path={folder.path_display}
-                  name={folder.name}
+            <Link to={`/main${folder.path_display}`}>
+              {folder.name}
+            </Link>
+
+                <input type="text" onChange={this.updateFolderName.bind(this)}/>
+                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
+
+                <td className="dropdownList">
+                  <DropdownOptions
+                    onDelete={this.onDelete}
+                    path={folder.path_display}
+                    name={folder.name}
                   />
-                  </td>
+                </td>
             </div>
             </td>
           </tr>
         )
       }
       })
-
+    
         return (
           <div className="App" >
         <div className="sideLeft">
@@ -310,6 +351,7 @@ class Main extends Component {
     </div>
       )
     }
+    
   }
-  
+
 export default Main
