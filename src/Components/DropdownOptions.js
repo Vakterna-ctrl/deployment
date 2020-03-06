@@ -7,7 +7,8 @@ class DropdownOptions extends PureComponent{
   constructor(props){
     super(props)
     this.state = {
-      deleteButtonClicked: false
+      deleteButtonClicked: false,
+      reNameButtonClicked: false,
 
     }
   }
@@ -24,10 +25,19 @@ class DropdownOptions extends PureComponent{
   closeOnDelete = () =>{
     this.setState({deleteButtonClicked: false})
   }
+  showRename = () =>{
+    this.setState({reNameButtonClicked: true})
+  }
+  closeRename = () =>{
+    this.props.renameFolders(this.props.path,this.props.id)
+    this.setState({reNameButtonClicked: false})
+  }
+  
+  
 
   render(){
-  const{onDelete,path,name} = this.props
-  const{deleteButtonClicked} = this.state
+  const{onDelete,path,name,id,renameFolders,updateFolderName} = this.props
+  const{deleteButtonClicked,reNameButtonClicked} = this.state
 
   console.log(deleteButtonClicked)
   return(
@@ -37,13 +47,20 @@ class DropdownOptions extends PureComponent{
   <ClickedOutsideRemover>
     <div className="dropdown-content">
     <div className="dropdown-list" onClick={this.onDeleteButtonClicked}>delete</div>
-    <div className="dropdown-list">ladda upp</div>
+    <div className="dropdown-list" onClick={this.showRename}>rename</div>
     </div>
 
   </ClickedOutsideRemover>
   {deleteButtonClicked ?
   <DeleteWindow onCloseDeleteWindow={this.onCloseDeleteWindow} path={path} onDelete={onDelete} name={name}/>
   : null}
+  {reNameButtonClicked ? 
+  <div>
+  <input className="tdInput" type="text" onChange={updateFolderName}/>
+  <button className="tdButton" onClick={this.closeRename}>Rename</button>
+  </div>
+  : null}
+
   </div>
   </>
 

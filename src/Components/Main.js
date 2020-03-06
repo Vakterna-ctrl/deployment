@@ -63,16 +63,12 @@ class Main extends Component {
       this.setState({showCreateFolder: false})
     }
 
-    onUpdateName = (e) => {
-      // this.setState({folders: e.target.value})
-    }
     updateFolderName = e => {
       this.setState({ folderRename: e.target.value });
     }
 
     updateFileName = e => {
       this.setState({ fileRename: e.target.value });
-
     }
 
     // delets files and closes delete window
@@ -171,7 +167,7 @@ class Main extends Component {
       });
   }
   
-  renameFolders = (path) => {
+  renameFolders = (path, id) => {
     const newName = this.state.folderRename;
 
     this.dbx.filesMoveV2({
@@ -181,10 +177,16 @@ class Main extends Component {
     .then(res => {
       console.log('rename', res);
       console.log('rename', window.location.pathname);
+
+      const newFolders = [...this.state.folders];
+      const idx = newFolders.findIndex(x => x.id === id);
+      newFolders[idx] = res.metadata;
+
+      this.setState({ folders: newFolders });
     })
   }
 
-  renameFiles = (path) => {
+  renameFiles = (path, id) => {
     const newName = this.state.fileRename;
 
 
@@ -198,6 +200,21 @@ class Main extends Component {
     .then(res => {
       console.log('rename', res);
       console.log('rename', window.location.pathname);
+
+      const newFiles = [...this.state.files];
+
+      console.log(newFiles);
+
+      console.log(id)
+
+      const idx = newFiles.findIndex(x => x.id === id);
+
+      console.log(idx);
+
+      console.log(newFiles);
+      newFiles[idx] = res.metadata;
+
+      this.setState({ files: newFiles });
     })
   }
 
@@ -221,7 +238,6 @@ class Main extends Component {
           return null
         }
         else {
-
           fileName = file.metadata.name;
           date_input = new Date((file.metadata.client_modified));
           datum = new Date(date_input).toDateString();
@@ -240,9 +256,10 @@ class Main extends Component {
 
               <span>{" Latest change: " + datum}</span>
               <span>{" Filesize: " + newSize}</span>
-
-              <input type="text" onChange={this.updateFileName.bind(this)}/>
-              <button onClick={() => this.renameFiles(file.metadata.path_display)}>Rename</button>
+              
+              <input className="tdInput" type="text" onChange={this.updateFileName.bind(this)}/>
+              <button className="tdButton" onClick={() => this.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
+              
             </div>
             </td>
           </tr>
@@ -266,14 +283,14 @@ class Main extends Component {
               {folder.name}
             </Link>
 
-                <input type="text" onChange={this.updateFolderName.bind(this)}/>
-                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
-
                 <td className="dropdownList">
                   <DropdownOptions
                     onDelete={this.onDelete}
                     path={folder.path_display}
                     name={folder.name}
+                    id={folder.id}
+                    updateFolderName={this.updateFolderName.bind(this)}
+                    renameFolders={this.renameFolders}
                   />
                 </td>
             </div>
@@ -304,6 +321,7 @@ class Main extends Component {
           <header>
             <h1>Project X</h1>
               <input 
+                className="searchField"
                 type="text" 
                 onChange={this.search_FOLDERS_FILES.bind(this)} 
                 placeholder="Search"
@@ -351,7 +369,6 @@ class Main extends Component {
     </div>
       )
     }
-    
   }
 
 export default Main
