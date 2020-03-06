@@ -24,7 +24,6 @@ class CreateFolder extends PureComponent{
 
 
   render(){
-  const{show} = this.state
   return ReactDom.createPortal(
     <>
     <div className="CreateFolderWindow">

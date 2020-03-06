@@ -10,28 +10,58 @@ import '../Css/UlItems.css'
  class RightNav extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             showCreateFolder: false,
         }
+        this.inputRef = React.createRef();
     }
-    
+    //simulera som om man klickade på input type fil
+    createFile = () =>{
+      this.inputRef.current.click();
+    }
+
+    //shows the window when click on create folder
+    onShowCreateFolder= () =>{
+      this.setState({showCreateFolder: true})
+
+    }
+    //closes the window when click on create folder
+    onCloseCreateFolder = () =>{
+      this.setState({showCreateFolder: false})
+    }
+    //Upload file
+    onChangeFile = () =>{
+      const{files} = this.props
+      let file = this.inputRef.current.files[0]
+      if(file){
+        this.props.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
+        .then(response=>{
+          let file = {}
+          file[".tag"] = "success"
+          let createFile = {file,metadata: response}
+          let uniteFiles = [...files, createFile]
+          this.props.setFileState(uniteFiles)
+        })
+      }
+    }
     //Create Folder
     createFolder = (name) =>{
-        this.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
+      const{folders} = this.props
+        this.props.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
         .then(response =>{
           let folder = {}
           folder[".tag"] = "folder"
           let newFolder = {...folder,...response.metadata}
-          let allFolders = [...this.state.folders, newFolder]
-          this.setState({folders: allFolders})
-        }).catch(response=>{
+          let allFolders = [...folders, newFolder]
+          this.props.setFolderState(allFolders)
         })
       }
-    
+
 
     render() {
         const{showCreateFolder} = this.state
+        const{createFolder,onChangeFile,inputRef} = this.props
         return (
             <div className="sidebarRight">
             <ul>

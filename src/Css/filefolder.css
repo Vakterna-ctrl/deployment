@@ -18,11 +18,14 @@
 }
 .namingMap{
   position: absolute;
-  top: 20%;
+  top: 45%;
+  left: 28%;
+
   border-radius: 0;
   background-color: white;
   border: 1px solid black;
   color: black;
+
 }
 .knapp{
   margin: 0
@@ -40,8 +43,8 @@
 
 }
 #create:hover{
-  background-color: black;
+  background-color: lightgray;
 }
 #cancel:hover{
-  background-color: black;
+  background-color: lightgray;
 }

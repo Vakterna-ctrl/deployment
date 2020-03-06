@@ -3,10 +3,10 @@ import '../Css/Options.css'
 import ReactDom from 'react-dom'
 
 
-function DeleteWindow({name,onCloseDeleteWindow,path,onDelete,closeOnDelete}){
+function DeleteWindow({name,onCloseDeleteWindow,path,tag,onDelete,closeOnDelete}){
 
-  function deleteOnClick(path_folder){
-    onDelete(path_folder)
+  function deleteOnClick(path_display,tag_name){
+    onDelete(path_display,tag_name)
     closeOnDelete()
   }
 
@@ -18,7 +18,7 @@ function DeleteWindow({name,onCloseDeleteWindow,path,onDelete,closeOnDelete}){
   <p className="deleteText">Ta bort fil?</p>
   <p className="deleteText">Vill du radera {name}?</p>
   <div className="deleteButton">
-  <div className="delete" onClick={()=>deleteOnClick(path)}>Radera</div>
+  <div className="delete" onClick={()=>deleteOnClick(path,tag)}>Radera</div>
   <div className="delete" onClick={onCloseDeleteWindow}>avbryt</div>
   </div>
   </div>
