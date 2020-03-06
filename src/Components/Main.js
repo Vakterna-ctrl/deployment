@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
-
 import { Dropbox } from "dropbox";
 import { Link } from 'react-router-dom';
-
 import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
 import CreateFolder from './CreateFolder'
-
-
+import folderImg from '../Img/folder-img.png';
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
 import '../Css/nav.css'
 import '../Css/UlItems.css'
 
-import folderImg from '../Img/folder-img.png';
+
 
 class Main extends Component {
     constructor(props) {
@@ -53,7 +50,6 @@ class Main extends Component {
         let allFolders = [...this.state.folders, newFolder]
         this.setState({folders: allFolders})
       }).catch(response=>{
-        console.log(response)
       })
     }
     //shows the window when click on create folder
@@ -67,10 +63,10 @@ class Main extends Component {
     }
 
     onUpdateName = (e) => {
-      this.setState({folders: e.target.value})
+      // this.setState({folders: e.target.value})
+
     }
 
-   
     // delets files and closes delete window
     onDelete = (path_delete) =>{
       const{folders} = this.state
@@ -83,21 +79,19 @@ class Main extends Component {
     }
     createFile = () =>{
       this.inputRef.current.click();
-      
     }
+    
     onChangeFile = () =>{
       let file = this.inputRef.current.files[0]
       if(file){
         this.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
         .then(response=>{
-          console.log(response)
           let file = {}
           file[".tag"] = "success"
           let createFile = {file,metadata: response}
           let uniteFiles = [...this.state.files, createFile]
           this.setState({uniteFiles})
         }).catch(response=>{
-          console.log(response)
         })
       }
     }
@@ -107,10 +101,9 @@ class Main extends Component {
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
-          console.log('HEJ2', res.entries);
           this.setState({ folders: res.entries });
 
-        const entries = res.entries
+          const entries = res.entries
           .filter(x => x[".tag"] === "file")
           .map((x) => ({ path: x.path_display }));
         return this.dbx.filesGetThumbnailBatch({
@@ -153,7 +146,6 @@ class Main extends Component {
     .then(res => {
       let entries = res.matches.map(x => x.metadata);
 
-      console.log('HEJ2', entries);
       this.setState({ folders: entries });
 
       entries = entries
@@ -171,7 +163,6 @@ class Main extends Component {
   downloadFile = (file) => {
     this.dbx.filesGetThumbnail({"path": file})
       .then(res => {
-        console.log('HEJ 3', res);
         let objURL = window.URL.createObjectURL(res.fileBlob);
         this.setState({ URL: objURL });
       });
@@ -180,30 +171,7 @@ class Main extends Component {
     render() {
       const { folders, files, URL, filterFolders, filterFiles, showCreateFolder } = this.state;
 
-      console.log(files, folders);
-
-      let minaFiler = files.filter((searchFiles) => {
-        let search = filterFiles;
-        let name
-
-        if(searchFiles[".tag"] === "failure"){
-          return null
-        } else {
-          name = searchFiles.metadata.name;
-        }
-
-        if (!search) {
-          return searchFiles;
-        }
-        else {
-          if (name.toLowerCase().indexOf(search) === -1) {
-            return false;
-          }
-          else {
-            return true;
-          }
-        }
-      }).map(file => {
+      let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
 
         let fileName
@@ -225,7 +193,6 @@ class Main extends Component {
           size = file.metadata.size;
           i = Math.floor(Math.log(size) / Math.log(1024));
           newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
-
         }
 
         return (
@@ -236,7 +203,6 @@ class Main extends Component {
               <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
 
               <span>{" Latest change: " + datum}</span>
-
               <span>{" Filesize: " + newSize}</span>
             </div>
             </td>
@@ -244,24 +210,8 @@ class Main extends Component {
         )
       })
 
-
-      let minaFolders = folders.filter((searchFolders) => {
-        let search = filterFolders;
-
-        if (!search) {
-          return searchFolders;
-        }
-        else {
-          if (searchFolders.name.toLowerCase().indexOf(search)) {
-            return false;
-          }
-          else {
-            return true;
-          }
-        }
-      }).map(folder => {
+      let minaFolders = folders.map(folder => {
         // render img icons to folders !
-
         const type = folder['.tag'];
         let folderThumbnail
 
@@ -271,7 +221,6 @@ class Main extends Component {
           <tr>
             <td>
             <div style={{ display: 'flex' }}>
-
             <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
@@ -292,7 +241,6 @@ class Main extends Component {
         )
       }
       })
-
 
         return (
           <div className="App" >
@@ -323,7 +271,6 @@ class Main extends Component {
           </header>
 
           <main>
-
           <div className="files">
                 <table className="table">
                     <thead>
@@ -331,22 +278,18 @@ class Main extends Component {
                         <th>Folder/file name</th>
                       </tr>
                   </thead>
-
                   <tbody>
                   <h2>Folders!</h2>
                     {minaFolders}
 
                   <h2 style={{ marginTop: '10%' }}>Files!</h2>
                     {minaFiler}
-
                 </tbody>
                 </table>
-
             </div>
 
             <div className="sidebarRight">
             <ul>
-
                 <li onClick={this.createFile}>Upload File<input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
@@ -361,7 +304,6 @@ class Main extends Component {
                 <li> New Shared Map </li>
             </ul>
               <p className="sideText">Choose your option</p>
-            
             </div>
           </main>
         </div>
@@ -369,5 +311,5 @@ class Main extends Component {
       )
     }
   }
-    
+  
 export default Main
