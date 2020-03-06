@@ -5,13 +5,12 @@ import LogOut from './LogOut'
 import DropdownOptions from './DropdownOptions'
 import CreateFolder from './CreateFolder'
 import folderImg from '../Img/folder-img.png';
+import LeftNav from "./LeftNav"
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
 import '../Css/nav.css'
 import '../Css/UlItems.css'
-
-
 
 class Main extends Component {
     constructor(props) {
@@ -27,7 +26,6 @@ class Main extends Component {
           fileRename: '',
 
           showCreateFolder: false,
-
           starArray: [],
           
         }
@@ -177,29 +175,29 @@ class Main extends Component {
   }
   
 
-  starFile = (file) => {
-     let newStarArray;
-    const { starArray } = this.state;
-    console.log(starArray, file);
-    if(starArray.find(x => x.metadata.id === file.metadata.id)) {
-      newStarArray = starArray.filter(x => x.metadata.id !== file.metadata.id)
-    }else {
-      newStarArray = [...this.state.starArray, file];
-    }
+//   starFile = (file) => {
+//      let newStarArray;
+//     const { starArray } = this.state;
+//     console.log(starArray, file);
+//     if(starArray.find(x => x.metadata.id === file.metadata.id)) {
+//       newStarArray = starArray.filter(x => x.metadata.id !== file.metadata.id)
+//     }else {
+//       newStarArray = [...this.state.starArray, file];
+//     }
 
     
-    let favorites = JSON.parse(localStorage.getItem('favorites'));
+//     let favorites = JSON.parse(localStorage.getItem('favorites'));
   
-    // const newStarArray = [...this.state.starArray, file];
+//     // const newStarArray = [...this.state.starArray, file];
     
-    localStorage.setItem('favorites', JSON.stringify(newStarArray));
+//     localStorage.setItem('favorites', JSON.stringify(newStarArray));
     
 
-     this.setState({
-       starArray: newStarArray
-     })
-    console.log(this.state.starArray);
-}
+//      this.setState({
+//        starArray: newStarArray
+//      })
+//     console.log(this.state.starArray);
+// }
 
   renameFolders = (path, id) => {
     const newName = this.state.folderRename;
@@ -253,36 +251,36 @@ class Main extends Component {
 
     render() {
 
-      let favFiles = this.state.starArray.map(favfile => {
-        let fileName
-        let datum
-        let date_input
-        let size
-        let newSize
-        let i
+      // let favFiles = this.state.starArray.map(favfile => {
+      //   let fileName
+      //   let datum
+      //   let date_input
+      //   let size
+      //   let newSize
+      //   let i
+      //   console.log(favfile)
+      //   fileName = favfile.metadata.name;
+      //   size = favfile.metadata.size;
+      //     i = Math.floor(Math.log(size) / Math.log(1024));
+      //     newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
 
-        fileName = favfile.metadata.name;
-        size = favfile.metadata.size;
-          i = Math.floor(Math.log(size) / Math.log(1024));
-          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
-
-        date_input = new Date((favfile.metadata.client_modified));
-        datum = new Date(date_input).toDateString();
-         console.log(favfile);
-         let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
-          return (
-            <tr>
-              <td>
-                <div >
-                  <img src={image} style={{ height: '42px', width: '42px' }} alt=""/> 
-                  <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
-                  <input className="checkbox" type="checkbox"  id={favfile.id} onClick={this.starFile.bind(this, favfile)} />
-            </div>
-            </td>
-            </tr>
-          )
-        // }
-        })
+      //   date_input = new Date((favfile.metadata.client_modified));
+      //   datum = new Date(date_input).toDateString();
+      //   console.log(favfile);
+      //   let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
+      //     return (
+      //       <tr>
+      //         <td>
+      //           <div >
+      //             <img src={image} style={{ height: '42px', width: '42px' }} alt=""/> 
+      //             <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
+      //             <input className="checkbox" type="checkbox"  id={favfile.id} onClick={this.starFile.bind(this, favfile)} />
+      //       </div>
+      //       </td>
+      //       </tr>
+      //     )
+      //   // }
+      //   })
 
       const { folders, files, URL, showCreateFolder } = this.state;
 
@@ -321,11 +319,10 @@ class Main extends Component {
               <span>{" Latest change: " + datum}</span>
               <span>{" Filesize: " + newSize}</span>
 
-              <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} />
+              {/* <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} /> */}
 
               <input className="tdInput" type="text" onChange={this.updateFileName.bind(this)}/>
               <button className="tdButton" onClick={() => this.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
-              <p>hej</p>
 
             </div>
             </td>
@@ -349,10 +346,10 @@ class Main extends Component {
             <Link to={`/main${folder.path_display}`}>
               {folder.name}
             </Link>
-            <input className="checkboxFiles" type="checkbox"  id={folder.id} onClick={this.starFile.bind(this, folder)} />
+            {/* <input className="checkboxFiles" type="checkbox"  id={folder.id} onClick={this.starFile.bind(this, folder)} /> */}
 
-                <input className="input" type="text" onChange={this.updateFolderName.bind(this)}/>
-                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
+                {/* <input className="input" type="text" onChange={this.updateFolderName.bind(this)}/>
+                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button> */}
 
                 <td className="dropdownList">
                   <DropdownOptions
@@ -373,20 +370,8 @@ class Main extends Component {
     
         return (
           <div className="App" >
-        <div className="sideLeft">
-          <div className="Logo">
-            Logo
-          </div>
-          <ul>
-            <li> Start </li>
-            <br/>
-            <li> Filter </li>
-            <br/>
-            <li> Paper </li>
-            <br/>
-            <li> Transfer </li>
-          </ul>
-        </div>
+        
+          <LeftNav />
 
         <div className={"bigBox"}>
           <header>
@@ -418,8 +403,8 @@ class Main extends Component {
                     {minaFiler}
 
                   <h2 style={{ marginTop: '10%' }} >Favorites</h2>
-                    {favFiles} 
-                    
+                    {/* {favFiles} 
+                     */}
 
                 </tbody>
                 </table>
