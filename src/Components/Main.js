@@ -189,7 +189,6 @@ class Main extends Component {
   renameFiles = (path, id) => {
     const newName = this.state.fileRename;
 
-
     let splitPath = path.split(".")
     let fileType = splitPath[1];
 
@@ -200,16 +199,16 @@ class Main extends Component {
     .then(res => {
       console.log('rename', res);
       console.log('rename', window.location.pathname);
-
-      if(res[".tag"] === "failure"){
-        return null
-      }
-      else {
+      let tag = res[".metadata.tag"];
+      if(tag === "folder"){
         const newFiles = [...this.state.files];
         const idx = newFiles.findIndex(x => x.id === id);
         newFiles[idx] = res.metadata;
         console.log("test123123", idx)
-        this.setState({ files: newFiles });
+        this.setState({ files: newFiles });return null
+      }
+      else {
+        return null
       }
     })
   }

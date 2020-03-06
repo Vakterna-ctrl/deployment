@@ -100,7 +100,7 @@ main{
     color: rgba(253, 253, 253, 0.801);
     text-align: center;
     background-color: rgba(0,0,0,0.56);
-    border: 1px solid rgba(0,0,0,0.56);;
+    border: 1px solid rgba(253, 253, 253, 0.801);;
     position: absolute;
     right: 0;
     margin-right: 120px;
@@ -117,7 +117,7 @@ main{
     color: rgba(253, 253, 253, 0.801);
     text-align: center;
     background-color: rgba(0,0,0,0.56);
-    border: 1px solid rgb(253, 253, 253);
+    border: 1px solid rgba(0,0,0,0.56);
     height: 20px;
     width: 100px;
     
