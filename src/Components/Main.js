@@ -254,7 +254,7 @@ class Main extends Component {
               
               <input className="tdInput" type="text" onChange={this.updateFileName.bind(this)}/>
               <button className="tdButton" onClick={() => this.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
-              
+              <p>hej</p>
             </div>
             </td>
           </tr>
