@@ -27,6 +27,9 @@ class Main extends Component {
           fileRename: '',
 
           showCreateFolder: false,
+
+          starArray: [],
+          
         }
         this.inputRef = React.createRef();
         this.renameRef = React.createRef();
@@ -102,6 +105,12 @@ class Main extends Component {
 
     componentDidMount() {
 
+      this.setState({
+        starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]")
+      });
+        let log = JSON.parse(window.localStorage.getItem("favorites"));
+      console.log(log)
+
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       this.dbx.filesListFolder({ path: "" })
         .then((res) => {
@@ -167,6 +176,31 @@ class Main extends Component {
       });
   }
   
+
+  starFile = (file) => {
+     let newStarArray;
+    const { starArray } = this.state;
+    console.log(starArray, file);
+    if(starArray.find(x => x.metadata.id === file.metadata.id)) {
+      newStarArray = starArray.filter(x => x.metadata.id !== file.metadata.id)
+    }else {
+      newStarArray = [...this.state.starArray, file];
+    }
+
+    
+    let favorites = JSON.parse(localStorage.getItem('favorites'));
+  
+    // const newStarArray = [...this.state.starArray, file];
+    
+    localStorage.setItem('favorites', JSON.stringify(newStarArray));
+    
+
+     this.setState({
+       starArray: newStarArray
+     })
+    console.log(this.state.starArray);
+}
+
   renameFolders = (path, id) => {
     const newName = this.state.folderRename;
 
@@ -175,6 +209,7 @@ class Main extends Component {
       "to_path": `/${newName}`,
     })
     .then(res => {
+
       console.log('rename', res);
       console.log('rename', window.location.pathname);
 
@@ -183,6 +218,7 @@ class Main extends Component {
       newFolders[idx] = res.metadata;
 
       this.setState({ folders: newFolders });
+
     })
   }
 
@@ -197,6 +233,7 @@ class Main extends Component {
       "to_path": `/${newName}.${fileType}`,
     })
     .then(res => {
+
       console.log('rename', res);
       console.log('rename', window.location.pathname);
       let tag = res[".metadata.tag"];
@@ -215,9 +252,41 @@ class Main extends Component {
 
 
     render() {
+
+      let favFiles = this.state.starArray.map(favfile => {
+        let fileName
+        let datum
+        let date_input
+        let size
+        let newSize
+        let i
+
+        fileName = favfile.metadata.name;
+        size = favfile.metadata.size;
+          i = Math.floor(Math.log(size) / Math.log(1024));
+          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
+
+        date_input = new Date((favfile.metadata.client_modified));
+        datum = new Date(date_input).toDateString();
+         console.log(favfile);
+         let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
+          return (
+            <tr>
+              <td>
+                <div >
+                  <img src={image} style={{ height: '42px', width: '42px' }} alt=""/> 
+                  <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
+                  <input className="checkbox" type="checkbox"  id={favfile.id} onClick={this.starFile.bind(this, favfile)} />
+            </div>
+            </td>
+            </tr>
+          )
+        // }
+        })
+
       const { folders, files, URL, showCreateFolder } = this.state;
 
-      console.log(files, folders);
+      // console.log(files, folders);
 
       let minaFiler = files.map(file => {
         let image = `data:image/jpeg;base64,${file.thumbnail}`;
@@ -251,10 +320,13 @@ class Main extends Component {
 
               <span>{" Latest change: " + datum}</span>
               <span>{" Filesize: " + newSize}</span>
-              
+
+              <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} />
+
               <input className="tdInput" type="text" onChange={this.updateFileName.bind(this)}/>
               <button className="tdButton" onClick={() => this.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
               <p>hej</p>
+
             </div>
             </td>
           </tr>
@@ -277,6 +349,10 @@ class Main extends Component {
             <Link to={`/main${folder.path_display}`}>
               {folder.name}
             </Link>
+            <input className="checkboxFiles" type="checkbox"  id={folder.id} onClick={this.starFile.bind(this, folder)} />
+
+                <input className="input" type="text" onChange={this.updateFolderName.bind(this)}/>
+                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button>
 
                 <td className="dropdownList">
                   <DropdownOptions
@@ -315,6 +391,7 @@ class Main extends Component {
         <div className={"bigBox"}>
           <header>
             <h1>Project X</h1>
+
               <input 
                 className="searchField"
                 type="text" 
@@ -333,18 +410,24 @@ class Main extends Component {
                       </tr>
                   </thead>
                   <tbody>
+
                   <h2>Folders!</h2>
                     {minaFolders}
 
                   <h2 style={{ marginTop: '10%' }}>Files!</h2>
                     {minaFiler}
+
+                  <h2 style={{ marginTop: '10%' }} >Favorites</h2>
+                    {favFiles} 
+                    
+
                 </tbody>
                 </table>
             </div>
 
             <div className="sidebarRight">
             <ul>
-                <li onClick={this.createFile}>Upload File<input onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
+                <li onClick={this.createFile}>Upload File<input className="input" onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br/>
