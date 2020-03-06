@@ -83,7 +83,7 @@ button:hover{
     cursor: pointer;
 }
 
-input {
+.input {
     color: rgba(253, 253, 253, 0.801);
     text-align: center;
     background-color: rgba(0,0,0,0.56);
@@ -96,11 +96,11 @@ input {
     border-bottom-left-radius: 40px;
 }
 
-input:hover{
+.input:hover{
     cursor: text;
 }
 
-input::placeholder {
+.input::placeholder {
     text-align: center;
     color: rgb(253, 253, 253);
     opacity: 0.5;
@@ -116,3 +116,37 @@ Link{
 .pathing {
     margin-left: 100px;
 }
+
+.checkbox {
+    visibility:hidden;
+    font-size:30px;
+    cursor:pointer;
+    position: relative;
+    bottom: 18px;
+}
+
+.checkbox:before {
+    content: "\2605";
+    visibility:visible;
+ }
+
+ .checkbox:checked:before {
+    content: "\2606";
+ }
+
+ .checkboxFiles{
+    visibility:hidden;
+    font-size:30px;
+    cursor:pointer;
+    position: relative;
+    bottom: 8px;
+ }
+
+ .checkboxFiles:before {
+    content: "\2606";
+    visibility:visible;
+ }
+
+ .checkboxFiles:checked:before {
+    content: "\2605";
+ }
