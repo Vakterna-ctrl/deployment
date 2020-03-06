@@ -201,20 +201,16 @@ class Main extends Component {
       console.log('rename', res);
       console.log('rename', window.location.pathname);
 
-      const newFiles = [...this.state.files];
-
-      console.log(newFiles);
-
-      console.log(id)
-
-      const idx = newFiles.findIndex(x => x.id === id);
-
-      console.log(idx);
-
-      console.log(newFiles);
-      newFiles[idx] = res.metadata;
-
-      this.setState({ files: newFiles });
+      if(res[".tag"] === "failure"){
+        return null
+      }
+      else {
+        const newFiles = [...this.state.files];
+        const idx = newFiles.findIndex(x => x.id === id);
+        newFiles[idx] = res.metadata;
+        console.log("test123123", idx)
+        this.setState({ files: newFiles });
+      }
     })
   }
 
