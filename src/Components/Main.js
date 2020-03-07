@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
-import { Link } from 'react-router-dom';
 import LogOut from './LogOut'
-import DropdownOptions from './DropdownOptions'
-import CreateFolder from './CreateFolder'
-import folderImg from '../Img/folder-img.png';
 import LeftNav from "./LeftNav"
+import Folders from "./Folders"
+import RightNav from "./RightNav"
+import Header from './Header'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -18,50 +17,21 @@ class Main extends Component {
 
         this.state = {
           folders: [],
-          show: false,
           files: [],
-          URL: null,
 
           folderRename: '',
           fileRename: '',
 
-          showCreateFolder: false,
           starArray: [],
-          
+
         }
-        this.inputRef = React.createRef();
         this.renameRef = React.createRef();
     }
-    // delets files and closes delete window
-    onDelete = (path_delete) =>{
-      const{folders} = this.state
-      this.dbx.filesDelete({path: path_delete})
-      .then(response =>{
-        let newFolder = folders.filter( folder => folder.name !== response.name)
-        this.setState({folders: newFolder})
-      })
+    setFolderState = (newFolder) =>{
+      this.setState({folder: newFolder})
     }
-
-    //Create Folder
-    createFolder = (name) =>{
-      this.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
-      .then(response =>{
-        let folder = {}
-        folder[".tag"] = "folder"
-        let newFolder = {...folder,...response.metadata}
-        let allFolders = [...this.state.folders, newFolder]
-        this.setState({folders: allFolders})
-      }).catch(response=>{
-      })
-    }
-    //shows the window when click on create folder
-    onShowCreateFolder= () =>{
-      this.setState({showCreateFolder: true})
-      
-    }
-    //closes the window when click on create folder
-    onCloseCreateFolder = () =>{
-      this.setState({showCreateFolder: false})
+    setFileState = (newFile) =>{
+      this.setState({file: newFile})
     }
 
     updateFolderName = e => {
@@ -73,32 +43,22 @@ class Main extends Component {
     }
 
     // delets files and closes delete window
-    onDelete = (path_delete) =>{
+    onDelete = (path_delete, tag) =>{
+      if(tag === 'folder'){
       const{folders} = this.state
-      const dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      dbx.filesDelete({path: path_delete})
+      this.dbx.filesDelete({path: path_delete})
       .then(response =>{
         let newFolder = folders.filter( folder => folder.name !== response.name)
         this.setState({folders: newFolder })
       })
+    }else{
+      const{files} = this.state
+      this.dbx.filesDelete({path: path_delete})
+      .then(response =>{
+        let newFiles = files.filter( files => files.metadata.name !== response.name)
+        this.setState({files: newFiles })
+      })
     }
-    createFile = () =>{
-      this.inputRef.current.click();
-    }
-    
-    onChangeFile = () =>{
-      let file = this.inputRef.current.files[0]
-      if(file){
-        this.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
-        .then(response=>{
-          let file = {}
-          file[".tag"] = "success"
-          let createFile = {file,metadata: response}
-          let uniteFiles = [...this.state.files, createFile]
-          this.setState({uniteFiles})
-        }).catch(response=>{
-        })
-      }
     }
 
     componentDidMount() {
@@ -107,23 +67,26 @@ class Main extends Component {
         starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]")
       });
         let log = JSON.parse(window.localStorage.getItem("favorites"));
-      console.log(log)
 
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      this.dbx.filesListFolder({ path: "" })
-        .then((res) => {
-          this.setState({ folders: res.entries });
+      let path = ""
+      if(this.props.match.params){
+        path = `/${this.props.match.params.path}`
+      }
+      this.dbx.filesListFolder({ path: path })
+      .then((res) => {
+        this.setState({ folders: res.entries });
 
-          const entries = res.entries
-          .filter(x => x[".tag"] === "file")
-          .map((x) => ({ path: x.path_display }));
-        return this.dbx.filesGetThumbnailBatch({
-          entries: entries,
-        });
-        })
-        .then((res) => {
-          this.setState({ files: res.entries });
-        });
+        const entries = res.entries
+        .filter(x => x[".tag"] === "file")
+        .map((x) => ({ path: x.path_display }));
+      return this.dbx.filesGetThumbnailBatch({
+        entries: entries,
+      });
+      })
+      .then((res) => {
+        this.setState({ files: res.entries });
+      });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -166,14 +129,6 @@ class Main extends Component {
       });
   }
 
-  downloadFile = (file) => {
-    this.dbx.filesGetThumbnail({"path": file})
-      .then(res => {
-        let objURL = window.URL.createObjectURL(res.fileBlob);
-        this.setState({ URL: objURL });
-      });
-  }
-  
 
 //   starFile = (file) => {
 //      let newStarArray;
@@ -185,13 +140,13 @@ class Main extends Component {
 //       newStarArray = [...this.state.starArray, file];
 //     }
 
-    
+
 //     let favorites = JSON.parse(localStorage.getItem('favorites'));
-  
+
 //     // const newStarArray = [...this.state.starArray, file];
-    
+
 //     localStorage.setItem('favorites', JSON.stringify(newStarArray));
-    
+
 
 //      this.setState({
 //        starArray: newStarArray
@@ -207,10 +162,6 @@ class Main extends Component {
       "to_path": `/${newName}`,
     })
     .then(res => {
-
-      console.log('rename', res);
-      console.log('rename', window.location.pathname);
-
       const newFolders = [...this.state.folders];
       const idx = newFolders.findIndex(x => x.id === id);
       newFolders[idx] = res.metadata;
@@ -231,15 +182,11 @@ class Main extends Component {
       "to_path": `/${newName}.${fileType}`,
     })
     .then(res => {
-
-      console.log('rename', res);
-      console.log('rename', window.location.pathname);
       let tag = res[".metadata.tag"];
       if(tag === "folder"){
         const newFiles = [...this.state.files];
         const idx = newFiles.findIndex(x => x.id === id);
         newFiles[idx] = res.metadata;
-        console.log("test123123", idx)
         this.setState({ files: newFiles });return null
       }
       else {
@@ -247,7 +194,6 @@ class Main extends Component {
       }
     })
   }
-
 
     render() {
 
@@ -272,7 +218,7 @@ class Main extends Component {
       //       <tr>
       //         <td>
       //           <div >
-      //             <img src={image} style={{ height: '42px', width: '42px' }} alt=""/> 
+      //             <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
       //             <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
       //             <input className="checkbox" type="checkbox"  id={favfile.id} onClick={this.starFile.bind(this, favfile)} />
       //       </div>
@@ -282,151 +228,18 @@ class Main extends Component {
       //   // }
       //   })
 
-      const { folders, files, URL, showCreateFolder } = this.state;
+      const { folders, files, } = this.state;
 
-      // console.log(files, folders);
-
-      let minaFiler = files.map(file => {
-        let image = `data:image/jpeg;base64,${file.thumbnail}`;
-
-        let fileName
-        let date_input
-        let datum
-        let size
-        let newSize
-        let i
-
-        if(file[".tag"] === "failure"){
-          return null
-        }
-        else {
-          fileName = file.metadata.name;
-          date_input = new Date((file.metadata.client_modified));
-          datum = new Date(date_input).toDateString();
-
-          size = file.metadata.size;
-          i = Math.floor(Math.log(size) / Math.log(1024));
-          newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
-        }
-      
-        return (
-          <tr>
-            <td>
-            <div style={{ display: 'flex' }}>
-              <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-              <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
-
-              <span>{" Latest change: " + datum}</span>
-              <span>{" Filesize: " + newSize}</span>
-
-              {/* <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} /> */}
-
-              <input className="tdInput" type="text" onChange={this.updateFileName.bind(this)}/>
-              <button className="tdButton" onClick={() => this.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
-
-            </div>
-            </td>
-          </tr>
-        )
-      })
-    
-      let minaFolders = folders.map(folder => {
-        // render img icons to folders !
-        const type = folder['.tag'];
-        let folderThumbnail
-
-        if (type === 'folder') {
-          folderThumbnail = folderImg;
-        return (
-          <tr>
-            <td>
-            <div style={{ display: 'flex' }}>
-            <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-
-            <Link to={`/main${folder.path_display}`}>
-              {folder.name}
-            </Link>
-            {/* <input className="checkboxFiles" type="checkbox"  id={folder.id} onClick={this.starFile.bind(this, folder)} /> */}
-
-                {/* <input className="input" type="text" onChange={this.updateFolderName.bind(this)}/>
-                <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button> */}
-
-                <td className="dropdownList">
-                  <DropdownOptions
-                    onDelete={this.onDelete}
-                    path={folder.path_display}
-                    name={folder.name}
-                    id={folder.id}
-                    updateFolderName={this.updateFolderName.bind(this)}
-                    renameFolders={this.renameFolders}
-                  />
-                </td>
-            </div>
-            </td>
-          </tr>
-        )
-      }
-      })
-    
         return (
           <div className="App" >
-        
-          <LeftNav />
 
+          <LeftNav dbx={this.dbx}/>
         <div className={"bigBox"}>
-          <header>
-            <h1>Project X</h1>
-
-              <input 
-                className="searchField"
-                type="text" 
-                onChange={this.search_FOLDERS_FILES.bind(this)} 
-                placeholder="Search"
-              />
-              <LogOut/>
-          </header>
-
+          <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES} path={this.props.match.params.path}/>
           <main>
-          <div className="files">
-                <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Folder/file name</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-
-                  <h2>Folders!</h2>
-                    {minaFolders}
-
-                  <h2 style={{ marginTop: '10%' }}>Files!</h2>
-                    {minaFiler}
-
-                  <h2 style={{ marginTop: '10%' }} >Favorites</h2>
-                    {/* {favFiles} 
-                     */}
-
-                </tbody>
-                </table>
-            </div>
-
-            <div className="sidebarRight">
-            <ul>
-                <li onClick={this.createFile}>Upload File<input className="input" onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
-                <br />
-                <li> Upload Map </li>
-                <br/>
-                <li onClick={this.onShowCreateFolder}>
-                Create Folder
-                </li>
-                {showCreateFolder === true ?
-                <CreateFolder showCreateFolder={showCreateFolder} createFolder={this.createFolder} onCloseCreateFolder={this.onCloseCreateFolder}/>
-                : null}
-                <br />
-                <li> New Shared Map </li>
-            </ul>
-              <p className="sideText">Choose your option</p>
-            </div>
+            <Folders dbx={this.dbx} files={files} renameFiles={this.renameFiles} updateFileName={this.updateFileName}
+            renameFolders={this.renameFolders} updateFolderName={this.updateFolderName} folders={folders} onDelete={this.onDelete}/>
+            <RightNav path={this.props.match.params.path} files={files} folders={folders} dbx={this.dbx} setFileState={this.setFileState} setFolderState={this.setFolderState} />
           </main>
         </div>
     </div>
