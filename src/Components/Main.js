@@ -46,7 +46,6 @@ class Main extends Component {
     onDelete = (path_delete, tag) =>{
       if(tag === 'folder'){
       const{folders} = this.state
-      console.log(folders)
       this.dbx.filesDelete({path: path_delete})
       .then(response =>{
         let newFolder = folders.filter( folder => folder.name !== response.name)
@@ -70,20 +69,24 @@ class Main extends Component {
         let log = JSON.parse(window.localStorage.getItem("favorites"));
 
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
-      this.dbx.filesListFolder({ path: "" })
-        .then((res) => {
-          this.setState({ folders: res.entries });
+      let path = ""
+      if(this.props.match.params){
+        path = `/${this.props.match.params.path}`
+      }
+      this.dbx.filesListFolder({ path: path })
+      .then((res) => {
+        this.setState({ folders: res.entries });
 
-          const entries = res.entries
-          .filter(x => x[".tag"] === "file")
-          .map((x) => ({ path: x.path_display }));
-        return this.dbx.filesGetThumbnailBatch({
-          entries: entries,
-        });
-        })
-        .then((res) => {
-          this.setState({ files: res.entries });
-        });
+        const entries = res.entries
+        .filter(x => x[".tag"] === "file")
+        .map((x) => ({ path: x.path_display }));
+      return this.dbx.filesGetThumbnailBatch({
+        entries: entries,
+      });
+      })
+      .then((res) => {
+        this.setState({ files: res.entries });
+      });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -232,11 +235,11 @@ class Main extends Component {
 
           <LeftNav dbx={this.dbx}/>
         <div className={"bigBox"}>
-          <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES}/>
+          <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES} path={this.props.match.params.path}/>
           <main>
             <Folders dbx={this.dbx} files={files} renameFiles={this.renameFiles} updateFileName={this.updateFileName}
             renameFolders={this.renameFolders} updateFolderName={this.updateFolderName} folders={folders} onDelete={this.onDelete}/>
-            <RightNav files={files} folders={folders} dbx={this.dbx} setFileState={this.setFileState} setFolderState={this.setFolderState} />
+            <RightNav path={this.props.match.params.path} files={files} folders={folders} dbx={this.dbx} setFileState={this.setFileState} setFolderState={this.setFolderState} />
           </main>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import CreateFolder from './CreateFolder'
+import GoBack from './GoBack'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -35,7 +36,11 @@ import '../Css/UlItems.css'
       const{files} = this.props
       let file = this.inputRef.current.files[0]
       if(file){
-        this.props.dbx.filesUpload({contents:file, path:`/${file.name}`, autorename: true})
+        let path = `/${file.name}`
+        if(this.props.path){
+          path = `/${this.props.path}/${file.name}`
+        }
+        this.props.dbx.filesUpload({contents:file, path: path, autorename: true})
         .then(response=>{
           let file = {}
           file[".tag"] = "success"
@@ -45,17 +50,23 @@ import '../Css/UlItems.css'
         })
       }
     }
+
     //Create Folder
     createFolder = (name) =>{
       const{folders} = this.props
-        this.props.dbx.filesCreateFolderV2({path: `/${name}`, autorename:true })
-        .then(response =>{
-          let folder = {}
-          folder[".tag"] = "folder"
-          let newFolder = {...folder,...response.metadata}
-          let allFolders = [...folders, newFolder]
-          this.props.setFolderState(allFolders)
-        })
+      let path = `/${name}`
+      if(this.props.path){
+        path = `/${this.props.path}/${name}`
+      }
+      this.props.dbx.filesCreateFolderV2({path: path, autorename:true })
+      .then(response =>{
+        let folder = {}
+        folder[".tag"] = "folder"
+        let newFolder = {...folder,...response.metadata}
+        let allFolders = [...folders, newFolder]
+        this.props.setFolderState(allFolders)
+      })
+
       }
 
 
@@ -76,7 +87,7 @@ import '../Css/UlItems.css'
                 <CreateFolder showCreateFolder={showCreateFolder} createFolder={this.createFolder} onCloseCreateFolder={this.onCloseCreateFolder}/>
                 : null}
                 <br />
-                <li> New Shared Map </li>
+                <li><GoBack path={this.props.path}/></li>
             </ul>
               <p className="sideText">Choose your option</p>
             </div>

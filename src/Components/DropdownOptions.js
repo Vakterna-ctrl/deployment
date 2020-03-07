@@ -43,9 +43,7 @@ class DropdownOptions extends PureComponent{
   render(){
   const{onDelete,path,name,id,renameFolders,renameFiles,tag,updateFolderName,updateFileName} = this.props
   const{deleteButtonClicked,reNameButtonClicked} = this.state
-  console.log(tag)
 
-  console.log(deleteButtonClicked)
   return(
   <>
   <div className="dropdown">
