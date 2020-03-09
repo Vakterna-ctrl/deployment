@@ -17,7 +17,6 @@ class GetToken extends Component {
         let fullHash = window.location.hash;
         console.log(fullHash)
         let hash = fullHash.match(/[A-Za-z\d\.\-_]{3,}/g);
-        console.log(hash[1]);
 
         this.setState({ activeToken: true });
 
