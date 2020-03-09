@@ -22,6 +22,7 @@ class Folders extends Component {
   }
 
   starFile = (file) => {
+    console.log('shit3', file)
     let newStarArray;
     const { starArray } = this.state;
     
@@ -78,8 +79,8 @@ starFolder = (folder) => {
             let id
             let path
 
-            const starredFiles = this.state.starArray
-            .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
+            // const starredFiles = this.state.starArray
+            // .find(x => file[".tag"] !== "failure" ?  x.metadata.id === id : null)
 
             if(file[".tag"] === "failure"){
               return null
@@ -111,6 +112,9 @@ starFolder = (folder) => {
                 path = file.path_display;
               }
             }
+
+            const starredFiles = this.state.starArray
+            .find(x => file[".tag"] !== "failure" ?  x.metadata.id === id : null)
 
             return (
               <tr>
@@ -193,6 +197,7 @@ starFolder = (folder) => {
           }
           })
           let favFiles = this.state.starArray.map(favfile => {
+            console.log('shit', favfile);
             let fileName
             let datum
             let date_input
