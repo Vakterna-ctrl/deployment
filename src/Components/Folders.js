@@ -80,7 +80,7 @@ starFolder = (folder) => {
 
             const starredFiles = this.state.starArray
             .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
-            
+
             if(file[".tag"] === "failure"){
               return null
             }
@@ -254,7 +254,7 @@ starFolder = (folder) => {
   
                 <h2 style={{ marginTop: '10%' }} >Favorite Folders!</h2>
                   {favFolders}
-                 
+                
                 <h2 style={{ marginTop: '10%' }} >Favorite Files!</h2>
                   {favFiles}
               </tbody>
