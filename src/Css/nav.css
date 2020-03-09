@@ -148,24 +148,23 @@ Link{
     font-size:30px;
     cursor:pointer;
     position: relative;
-    bottom: 18px;
+    bottom: 20px;
+    margin-left: 200px ;
 }
 
 .checkbox:before {
-    content: "\2605";
+    content: "\2606";
     visibility:visible;
  }
 
  .checkbox:checked:before {
-    content: "\2606";
+    content: "\2605";
  }
 
  .checkboxFiles{
     visibility:hidden;
     font-size:30px;
     cursor:pointer;
-    position: relative;
-    bottom: 8px;
  }
 
  .checkboxFiles:before {
@@ -176,3 +175,17 @@ Link{
  .checkboxFiles:checked:before {
     content: "\2605";
  }
+
+ .tdInputDiv{
+    margin-left: 980px;
+}
+
+.tdInputDivv{
+    margin-left: 1180px;
+    position: relative;
+    bottom: 20px;
+}
+
+
+
+ 
