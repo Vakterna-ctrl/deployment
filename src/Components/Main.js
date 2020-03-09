@@ -56,7 +56,14 @@ class Main extends Component {
       const{files} = this.state
       this.dbx.filesDelete({path: path_delete})
       .then(response =>{
-        let newFiles = files.filter( files => files.metadata.name !== response.name)
+        let newFiles = files.filter( files => {
+          if (files['.tag'] === 'failure') {
+            return null;
+          }
+          else {
+            return files.metadata.name !== response.name;
+          }
+        })
         this.setState({files: newFiles })
       })
     }
