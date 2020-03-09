@@ -21,6 +21,7 @@ class Main extends Component {
 
           folderRename: '',
           fileRename: '',
+          changes: false,
 
           starArray: [],
 
@@ -67,47 +68,61 @@ class Main extends Component {
         starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]")
       });
         let log = JSON.parse(window.localStorage.getItem("favorites"));
-
+        
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       let path = ""
-      if(this.props.match.params){
+      if(this.props.match.params.path){
         path = `/${this.props.match.params.path}`
       }
       this.dbx.filesListFolder({ path: path })
-      .then((res) => {
-        this.setState({ folders: res.entries });
+      .then((resFolder) => {
+        console.log(resFolder)
+        this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
+        .then(response => {
+          console.log('lol')
+          this.setState({changes: true})
 
-        const entries = res.entries
-        .filter(x => x[".tag"] === "file")
-        .map((x) => ({ path: x.path_display }));
-      return this.dbx.filesGetThumbnailBatch({
-        entries: entries,
-      });
+        })
+
+        const entries = resFolder.entries
+          .filter(x => x[".tag"] === "file")
+          .map((x) => ({ path: x.path_display }));
+        return this.dbx.filesGetThumbnailBatch({
+          entries: entries,
+        })
+        .then((res) => {
+          this.setState({ files: res.entries, folders: resFolder.entries});
+        })
       })
-      .then((res) => {
-        this.setState({ files: res.entries });
-      });
+
     }
 
     componentDidUpdate(prevProps, prevState) {
-      if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
-      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      if (this.state.changes) {
+        console.log('lol')
 
-      let path = this.props.location.pathname;
-      path = path.slice(5);
-      this.dbx.filesListFolder({ path: path })
-      .then((res) => {
-        this.setState({ folders: res.entries })
+        let path = ""
+        if(this.props.match.params.path){
+          path = `/${this.props.match.params.path}`
+        }
+        this.dbx.filesListFolder({ path: path })
+        .then((resFolder) => {
 
-        const entries = res.entries
-        .filter(x => x[".tag"] === "file")
-        .map((x) => ({ path: x.path_display }));
-      return this.dbx.filesGetThumbnailBatch({ entries });
-      })
-      .then((res) => {
-        this.setState({ files: res.entries });
-      });
+          this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
+          .then(response => this.setState({changes: true}))
+
+          const entries = resFolder.entries
+            .filter(x => x[".tag"] === "file")
+            .map((x) => ({ path: x.path_display }));
+          return this.dbx.filesGetThumbnailBatch({
+            entries: entries,
+          })
+          .then((res) => {
+            this.setState({ files: res.entries, folders: resFolder.entries, changes:false });
+          })
+        })
   }
+
   }
 
   search_FOLDERS_FILES = (e) => {
@@ -116,7 +131,6 @@ class Main extends Component {
       let entries = res.matches.map(x => x.metadata);
 
       this.setState({ folders: entries });
-
       entries = entries
         .filter(x => x[".tag"] === "file")
         .map((x) => ({ path: x.path_display }));
@@ -127,6 +141,7 @@ class Main extends Component {
       .then((res) => {
         this.setState({ files: res.entries });
       });
+
   }
 
 
