@@ -11,12 +11,12 @@ class Folders extends Component {
     }
   }
   downloadFile = (file) => {
-     this.props.dbx.filesGetThumbnail({"path": file})
-      .then(res => {
-        console.log(file)
-        let objURL = window.URL.createObjectURL(res.fileBlob);
-        this.setState({ URL: objURL });
-      });
+    this.props.dbx.filesGetThumbnail({"path": file})
+    .then(res => {
+      console.log(file)
+      let objURL = window.URL.createObjectURL(res.fileBlob);
+      this.setState({ URL: objURL });
+    });
   }
 
     render() {
@@ -32,18 +32,38 @@ class Folders extends Component {
             let size
             let newSize
             let i
+            let id
+            let path
 
             if(file[".tag"] === "failure"){
               return null
             }
             else {
-              fileName = file.metadata.name;
-              date_input = new Date((file.metadata.client_modified));
-              datum = new Date(date_input).toDateString();
+              if (file.metadata) {
+                
+                fileName = file.metadata.name;
+                date_input = new Date((file.metadata.client_modified));
+                datum = new Date(date_input).toDateString();
 
-              size = file.metadata.size;
-              i = Math.floor(Math.log(size) / Math.log(1024));
-              newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
+                size = file.metadata.size;
+                i = Math.floor(Math.log(size) / Math.log(1024));
+                newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
+
+                id = file.metadata.id;
+                path = file.metadata.path_display;
+              }
+              else {
+                fileName = file.name;
+                date_input = new Date((file.client_modified));
+                datum = new Date(date_input).toDateString();
+  
+                size = file.size;
+                i = Math.floor(Math.log(size) / Math.log(1024));
+                newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
+
+                id = file.id;
+                path = file.path_display;
+              }
             }
 
             return (
@@ -51,7 +71,7 @@ class Folders extends Component {
                 <td>
                 <div style={{ display: 'flex' }}>
                   <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-                  <a onClick={() => this.downloadFile(file.metadata.path_display)} href={URL} download={fileName}>{fileName}</a>
+                  <a onClick={() => this.downloadFile(path)} href={URL} download={fileName}>{fileName}</a>
 
                   <span>{" Latest change: " + datum}</span>
                   <span>{" Filesize: " + newSize}</span>
@@ -59,15 +79,15 @@ class Folders extends Component {
                   {/* <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} /> */}
 
                   <input className="tdInput" type="text" onChange={this.props.updateFileName}/>
-                  <button className="tdButton" onClick={() => this.props.renameFiles(file.metadata.path_display, file.metadata.id)}>Rename</button>
+                  <button className="tdButton" onClick={() => this.props.renameFiles(path, id)}>Rename</button>
 
                   <td className="dropdownList">
                     <DropdownOptions
                       onDelete={onDelete}
                       tag={file['.tag']}
-                      path={file.metadata.path_display}
-                      name={file.metadata.name}
-                      id={file.metadata.id}
+                      path={path}
+                      name={fileName}
+                      id={id}
                       updateFileName={this.props.updateFileName}
                       renameFiles={this.props.renameFiles}
                     />

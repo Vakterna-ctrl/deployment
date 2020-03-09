@@ -182,16 +182,19 @@ class Main extends Component {
       "to_path": `/${newName}.${fileType}`,
     })
     .then(res => {
-      let tag = res[".metadata.tag"];
-      if(tag === "folder"){
-        const newFiles = [...this.state.files];
-        const idx = newFiles.findIndex(x => x.id === id);
-        newFiles[idx] = res.metadata;
-        this.setState({ files: newFiles });return null
-      }
-      else {
-        return null
-      }
+      const newFiles = [...this.state.files];
+      const idx = newFiles.findIndex(x => {
+        if (x['.tag'] === 'failure') {
+          return null
+        }
+        else {
+          return x.metadata.id === id;
+        }
+      })
+
+      newFiles[idx] = res.metadata;
+
+      this.setState({ files: newFiles });
     })
   }
 
