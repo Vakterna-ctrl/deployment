@@ -2,24 +2,27 @@ import React, { Component, PureComponent } from 'react'
 import '../Css/Options.css'
 import ClickedOutsideRemover from './ClickedOutsideRemover'
 import DeleteWindow from './DeleteWindow'
+import ReactDom from 'react-dom'
 
-class DropdownOptions extends PureComponent{
-  constructor(props){
-    super(props)
-    
-  }
+function NewName({update, closeRename,hideRename}){
+ 
 
-
-  render(){
-    const{update, rename} = this.props
-  return(
-    <div>
+  return ReactDom.createPortal(
+    <div className="renameWindow">
+    <p>Do you want to rename this?</p>
     <input className="tdInput" type="text" onChange={update}/>
-    <button className="tdButton" onClick={this.props.closeRename}>Rename</button>
+    <br/>
+    <div className="renameButtons">
+    <button className="tdButton" onClick={closeRename}>Rename</button>
+    <button className="tdButton" onClick={hideRename}>avbryt</button>
+    </div>
     </div>
 
-)}}
+    , 
+    document.querySelector('#renameWindow')
+
+)}
 
 
 
-export default DropdownOptions
+export default NewName

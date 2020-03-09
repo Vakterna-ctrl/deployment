@@ -72,5 +72,26 @@
 }
 .delete:hover{
   background-color: lightblue;
+}
+.renameWindow{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 200px;
+  background-color: white;
+  border-radius: 50px;
+  transform: translate(-50%, -50%);
+  -webkit-box-shadow: 8px 7px 0px 2000px rgba(128,128,128,0.75);
+  -moz-box-shadow: 8px 7px 0px 2000px rgba(128,128,128,0.75);
+  box-shadow: 8px 7px 0px 2000px rgba(128,128,128,0.75);
+  display:flex;
+  align-items: center;
+  flex-direction: column;
 
+}
+.renameButtons{
+  display: flex;
+  width: 150px;
+  justify-content: space-between;
 }

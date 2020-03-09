@@ -78,9 +78,6 @@ class Folders extends Component {
 
                   {/* <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} /> */}
 
-                  <input className="tdInput" type="text" onChange={this.props.updateFileName}/>
-                  <button className="tdButton" onClick={() => this.props.renameFiles(path, id)}>Rename</button>
-
                   <td className="dropdownList">
                     <DropdownOptions
                       onDelete={onDelete}

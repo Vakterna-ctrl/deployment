@@ -37,6 +37,9 @@ class DropdownOptions extends PureComponent{
     this.props.renameFiles(this.props.path,this.props.id)
     this.setState({reNameButtonClicked: false})
   }
+  hideRename = () =>{
+    this.setState({reNameButtonClicked: false})
+  }
 
 
 
@@ -61,6 +64,7 @@ class DropdownOptions extends PureComponent{
   {reNameButtonClicked ? <NewName
      rename={tag === 'folder' ? renameFolders : renameFiles} update={tag === 'folder' ? updateFolderName : updateFileName}
      closeRename={tag === 'folder' ? this.closeRenameFolder : this.closeRenameFiles}
+     hideRename = {this.hideRename}
      />
 
   : null}
