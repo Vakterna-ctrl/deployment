@@ -15,14 +15,12 @@ class Folders extends Component {
   downloadFile = (file) => {
     this.props.dbx.filesGetThumbnail({"path": file})
     .then(res => {
-      console.log(file)
       let objURL = window.URL.createObjectURL(res.fileBlob);
       this.setState({ URL: objURL });
     });
   }
 
   starFile = (file) => {
-    console.log('shit3', file)
     let newStarArray;
     const { starArray } = this.state;
     
@@ -34,27 +32,27 @@ class Folders extends Component {
 
     let favorites = JSON.parse(localStorage.getItem('favorites'));
     localStorage.setItem('favorites', JSON.stringify(newStarArray));
-     this.setState({
-       starArray: newStarArray
-     })
+      this.setState({
+        starArray: newStarArray
+      })
 }
 
 starFolder = (folder) => {
   let newstarArrayFolders;
   const { starArrayFolders } = this.state;
- 
+
   if(starArrayFolders.find(y => y.id === folder.id)) {
-   newstarArrayFolders = starArrayFolders.filter(y => y.id !== folder.id)
+    newstarArrayFolders = starArrayFolders.filter(y => y.id !== folder.id)
   }else {
-   newstarArrayFolders = [...this.state.starArrayFolders, folder];
+    newstarArrayFolders = [...this.state.starArrayFolders, folder];
   }
- 
+
   let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders'));
   localStorage.setItem('favoritesFolders', JSON.stringify(newstarArrayFolders));
-   this.setState({
-     starArrayFolders: newstarArrayFolders
-   })
- }
+    this.setState({
+      starArrayFolders: newstarArrayFolders
+    })
+  }
 
  componentDidMount() {
   this.setState({
@@ -78,9 +76,6 @@ starFolder = (folder) => {
             let i
             let id
             let path
-
-            // const starredFiles = this.state.starArray
-            // .find(x => file[".tag"] !== "failure" ?  x.metadata.id === id : null)
 
             if(file[".tag"] === "failure"){
               return null
@@ -197,31 +192,36 @@ starFolder = (folder) => {
           }
           })
           let favFiles = this.state.starArray.map(favfile => {
-            console.log('shit', favfile);
+            let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
+            
             let fileName
             let datum
             let date_input
             let size
             let newSize
             let i
+
             fileName = favfile.metadata.name;
             size = favfile.metadata.size;
             i = Math.floor(Math.log(size) / Math.log(1024));
             newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
             date_input = new Date((favfile.metadata.client_modified));
             datum = new Date(date_input).toDateString();
-            let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
               return (
                 <tr>
                   <td>
                     <div style={{ display: 'flex' }}>
                       <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-                      <a onClick={() => this.downloadFile(favfile.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.metadata.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
+                      <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={favfile.metadata.name} className="favfile" key={favfile.metadata.id}> {favfile.metadata.name} </a>
+                      {/* <br /> {favfile.metadata.name}   */}
+                      <span>{" Latest change: " + datum}</span>
+                      <span>{ " Filesize: " + newSize}</span>
                 </div>
                 </td>
                 </tr>
               )
             });
+
           let favFolders = this.state.starArrayFolders.map(favfolder => {
             let folderName;
             const type = favfolder['.tag'];
@@ -235,7 +235,9 @@ starFolder = (folder) => {
                   <td>
                     <div style={{ display: 'flex' }}>
                       <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
-                      <a onClick={() => this.downloadFile(favfolder.path_display)} href={this.state.URL} download={folderName} className="favfile" key={favfolder.id}> <br /> {favfolder.name} </a>
+                      <Link to={`/main${favfolder.path_display}`}>
+                        {favfolder.name}
+                      </Link>
                 </div>
                 </td>
                 </tr>
