@@ -24,7 +24,7 @@ class Folders extends Component {
   starFile = (file) => {
     let newStarArray;
     const { starArray } = this.state;
-    
+    console.log("file", file)
     if(starArray.find(x => x.metadata.id === file.metadata.id)) {
       newStarArray = starArray.filter(x => x.metadata.id !== file.metadata.id)
     }else {
@@ -77,6 +77,8 @@ starFolder = (folder) => {
             let i
             let id
             let path
+
+            console.log(this.state.starArray);
 
             const starredFiles = this.state.starArray
             .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
@@ -193,6 +195,7 @@ starFolder = (folder) => {
           }
           })
           let favFiles = this.state.starArray.map(favfile => {
+            console.log("test123", favfile)
             let fileName
             let datum
             let date_input
@@ -211,7 +214,7 @@ starFolder = (folder) => {
                   <td>
                     <div style={{ display: 'flex' }}>
                       <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-                      <a onClick={() => this.downloadFile(favfile.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.metadata.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
+                      <a onClick={() => this.downloadFile(favfile.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.metadata.id}>  {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
                 </div>
                 </td>
                 </tr>

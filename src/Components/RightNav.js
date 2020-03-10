@@ -75,7 +75,7 @@ import '../Css/UlItems.css'
         return (
             <div className="sidebarRight">
             <ul>
-                <li onClick={this.createFile}>Upload File<input className="input" onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
+                <li onClick={this.createFile}>Upload File<input accept="jpg, jpeg, png, tiff, tif, gif, bmp" className="input"  onChange={this.onChangeFile} type="file" hidden="hidden" ref={this.inputRef}/> </li>
                 <br />
                 <li> Upload Map </li>
                 <br/>

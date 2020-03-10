@@ -176,12 +176,9 @@ Link{
     content: "\2605";
  }
 
- .tdInputDiv{
-    margin-left: 980px;
-}
 
 .tdInputDivv{
-    margin-left: 1180px;
+    
     position: relative;
     bottom: 20px;
 }

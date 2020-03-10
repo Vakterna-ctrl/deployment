@@ -39,7 +39,7 @@ a, .return{
     font-size: large;
     text-decoration: underline solid black;
     transition: all 0.5s;
-    transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out; 
   }
 
 a, .return:hover{
