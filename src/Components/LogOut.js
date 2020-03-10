@@ -14,6 +14,7 @@ class LogOut extends Component {
 
     logOut = () => {
         this.setState({ logout: true });
+        localStorage.clear();
         updateToken(null);
     }
 
