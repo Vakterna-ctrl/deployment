@@ -138,7 +138,6 @@ starFolder = (folder) => {
                 </div>
                 <div className="tdInputDivv" style={{display: 'flex'}}>
                 <input  checked={!!starredFiles} className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} />
-                <p>hej</p>
                 </div>
                 </td>
               </tr>
