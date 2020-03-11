@@ -112,14 +112,12 @@ class Folders extends Component {
           return x.metadata.id === id;
         }
       })
-
       newFiles[idx] = res.metadata;
 
       this.props.setFileState(newFiles);
       this.setState({starArray: newfavoritesFiles})
     })
   }
-
 
   starFile = (file) => {
     let newStarArray;
@@ -190,9 +188,6 @@ starFolder = (folder) => {
               if (file.metadata) {
                 starredFiles = this.state.starArray
                 .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
-                console.log(file)
-
-
 
                 fileName = file.metadata.name;
                 date_input = new Date((file.metadata.client_modified));
@@ -231,8 +226,6 @@ starFolder = (folder) => {
 
                   <span>{" Latest change: " + datum}</span>
                   <span>{" Filesize: " + newSize}</span>
-
-                  {/* <input className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} /> */}
 
                   <td className="dropdownList">
                     <DropdownOptions
@@ -278,11 +271,6 @@ starFolder = (folder) => {
                 <Link to={`/main${folder.path_display}`}>
                   {folder.name}
                 </Link>
-                {/* <input className="checkboxFiles" type="checkbox"  id={folder.id} onClick={this.starFile.bind(this, folder)} /> */}
-
-                    {/* <input className="input" type="text" onChange={this.updateFolderName.bind(this)}/>
-                    <button onClick={() => this.renameFolders(folder.path_display)}>Rename</button> */}
-
                     <td className="dropdownList">
                       <DropdownOptions
                         onDelete={this.onDelete}
@@ -296,7 +284,6 @@ starFolder = (folder) => {
                         copy={this.props.copy}
                       />
                     </td>
-                    
                 </div>
                 <div className="tdInputDiv" style={{display: 'flex'}}>
                     <input checked={!!starredFolders} className="checkbox" type="checkbox"  id={folder.id} onClick={this.starFolder.bind(this, folder)} />
@@ -311,7 +298,6 @@ starFolder = (folder) => {
             console.log("test123", favfile)
 
             let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
-
 
             let fileName
             let datum
@@ -387,9 +373,7 @@ starFolder = (folder) => {
               </table>
           </div>
         )
-
     }
-
 }
 
 export default Folders
