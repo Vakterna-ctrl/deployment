@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import DropdownOptions from "./DropdownOptions"
 import {Link} from 'react-router-dom'
 import folderImg from '../Img/folder-img.png';
+import fileImg from '../Img/file-img.png'
 
 class Folders extends Component {
   constructor(props){
@@ -15,8 +16,9 @@ class Folders extends Component {
     }
   }
   downloadFile = (file) => {
-    this.props.dbx.filesGetThumbnail({"path": file})
+    this.props.dbx.filesDownload({path: file})
     .then(res => {
+      console.log(res)
       let objURL = window.URL.createObjectURL(res.fileBlob);
       this.setState({ URL: objURL });
     });
@@ -161,6 +163,7 @@ starFolder = (folder) => {
 }
 
     render() {
+      console.log(this.props.folders);
         const{files,folders} = this.props
         const{URL} = this.state
 
@@ -177,6 +180,7 @@ starFolder = (folder) => {
             let path
             let starredFiles = []
 
+            console.log(file);
 
 
             if(file[".tag"] === "failure"){
@@ -222,7 +226,7 @@ starFolder = (folder) => {
               <tr>
                 <td>
                 <div style={{ display: 'flex' }}>
-                  <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+                  <img src={file.thumbnail !== null ? image : fileImg } style={{ height: '42px', width: '42px' }} alt=""/>
                   <a onClick={() => this.downloadFile(path)} href={URL} download={fileName}>{fileName}</a>
 
                   <span>{" Latest change: " + datum}</span>
@@ -326,7 +330,7 @@ starFolder = (folder) => {
                 <tr>
                   <td>
                     <div style={{ display: 'flex' }}>
-                      <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
+                    <img src={favfile.thumbnail !== null ? image : fileImg} style={{ height: '42px', width: '42px' }} alt=""/>
                       <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={favfile.metadata.name} className="favfile" key={favfile.metadata.id}> {favfile.metadata.name} </a>
                       <span>{" Latest change: " + datum}</span>
                       <span>{ " Filesize: " + newSize}</span>

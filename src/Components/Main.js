@@ -36,10 +36,7 @@ class Main extends Component {
 
 
     copy = (original_path, your_path) =>{
-      let url;
-      if(this.props.match.params.path){
-         url = this.props.match.params.path
-      }
+     
       this.dbx.filesCopy({
         from_path: original_path,
         to_path: your_path,
@@ -55,6 +52,7 @@ class Main extends Component {
 
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       let path = ""
+
       if(this.props.match.params.path){
         path = `/${this.props.match.params.path}`
       }
@@ -75,7 +73,19 @@ class Main extends Component {
           entries: entries,
         })
         .then((res) => {
-          this.setState({ files: res.entries, folders: resFolder.entries});
+          const files = resFolder.entries
+            .filter(x => x[".tag"] !== "folder")
+            .map(x => {
+              const th = res.entries.find(y => y.metadata && y.metadata.id === x.id);
+
+              return {
+                metadata: x,
+                ".tag": "success",
+                thumbnail: th ? th.thumbnail : null,
+              }
+            });
+
+          this.setState({ files: files, folders: resFolder.entries});
         })
       })
 
@@ -102,7 +112,8 @@ class Main extends Component {
             entries: entries,
           })
           .then((res) => {
-            this.setState({ files: res.entries, folders: resFolder.entries, changes:false });
+            const files = res.entries;
+            this.setState({ files: files, folders: resFolder.entries, changes:false });
           })
         })
   }
@@ -129,63 +140,9 @@ class Main extends Component {
   }
 
 
-//   starFile = (file) => {
-//      let newStarArray;
-//     const { starArray } = this.state;
-//     console.log(starArray, file);
-//     if(starArray.find(x => x.metadata.id === file.metadata.id)) {
-//       newStarArray = starArray.filter(x => x.metadata.id !== file.metadata.id)
-//     }else {
-//       newStarArray = [...this.state.starArray, file];
-//     }
-
-
-//     let favorites = JSON.parse(localStorage.getItem('favorites'));
-
-//     // const newStarArray = [...this.state.starArray, file];
-
-//     localStorage.setItem('favorites', JSON.stringify(newStarArray));
-
-
-//      this.setState({
-//        starArray: newStarArray
-//      })
-//     console.log(this.state.starArray);
-// }
-
 
     render() {
 
-      // let favFiles = this.state.starArray.map(favfile => {
-      //   let fileName
-      //   let datum
-      //   let date_input
-      //   let size
-      //   let newSize
-      //   let i
-      //   console.log(favfile)
-      //   fileName = favfile.metadata.name;
-      //   size = favfile.metadata.size;
-      //     i = Math.floor(Math.log(size) / Math.log(1024));
-      //     newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i]
-
-      //   date_input = new Date((favfile.metadata.client_modified));
-      //   datum = new Date(date_input).toDateString();
-      //   console.log(favfile);
-      //   let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
-      //     return (
-      //       <tr>
-      //         <td>
-      //           <div >
-      //             <img src={image} style={{ height: '42px', width: '42px' }} alt=""/>
-      //             <a onClick={() => this.downloadFile(favfile.metadata.path_display)} href={this.state.URL} download={fileName} className="favfile" key={favfile.id}> <br /> {favfile.metadata.name} {" Latest change: " + datum} { " Filesize: " + newSize} </a>
-      //             <input className="checkbox" type="checkbox"  id={favfile.id} onClick={this.starFile.bind(this, favfile)} />
-      //       </div>
-      //       </td>
-      //       </tr>
-      //     )
-      //   // }
-      //   })
 
       const { folders, files, } = this.state;
 
