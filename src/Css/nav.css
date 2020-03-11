@@ -152,7 +152,8 @@ Link{
     cursor:pointer;
     position: relative;
     bottom: 20px;
-    margin-left: 200px ;
+    margin-left: 230px ;
+    
 }
 
 .checkbox:before {

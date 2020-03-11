@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
+import '../Css/UlItems.css'
+
+
 class GoBack extends Component {
 
   goBackwards = () =>{
@@ -15,7 +18,7 @@ class GoBack extends Component {
     render() {
         return (
           <div onClick={this.goBackwards}>
-          <Link to={this.goBackwards}>Go Back</Link>
+          <Link className="liDiv" to={this.goBackwards}>Go Back</Link>
           </div>
 
         )

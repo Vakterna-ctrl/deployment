@@ -268,7 +268,7 @@ starFolder = (folder) => {
             return (
               <tr>
                 <td>
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex'}}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
 
                 <Link to={`/main${folder.path_display}`}>
@@ -292,6 +292,7 @@ starFolder = (folder) => {
                         copy={this.props.copy}
                       />
                     </td>
+                    
                 </div>
                 <div className="tdInputDiv" style={{display: 'flex'}}>
                     <input checked={!!starredFolders} className="checkbox" type="checkbox"  id={folder.id} onClick={this.starFolder.bind(this, folder)} />
@@ -314,7 +315,11 @@ starFolder = (folder) => {
             let size
             let newSize
             let i
+<<<<<<< HEAD
+            console.log(favfile)
+=======
 
+>>>>>>> 1296849d58cd02815be128d0ddf271e6037a9440
             fileName = favfile.metadata.name;
             size = favfile.metadata.size;
             i = Math.floor(Math.log(size) / Math.log(1024));
@@ -339,7 +344,11 @@ starFolder = (folder) => {
             let folderName;
             const type = favfolder['.tag'];
             let folderThumbnail
+<<<<<<< HEAD
+            console.log(favfolder)
+=======
 
+>>>>>>> 1296849d58cd02815be128d0ddf271e6037a9440
             if (type === 'folder') {
               folderThumbnail = folderImg;
             folderName = favfolder.name;

@@ -32,7 +32,8 @@ class LogIn extends Component {
     }
 
     LogIn = () => {
-        let CLIENT_ID = '0xtl0sizkjng6vu';
+
+        let CLIENT_ID = '36rhe8urwdavjdu';
 
         let dbx = new Dropbox({ clientId: CLIENT_ID });
         let LocalHost = 'http://localhost:3000/auth';
