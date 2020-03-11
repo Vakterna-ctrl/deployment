@@ -139,7 +139,6 @@ starFolder = (folder) => {
                 </div>
                 <div className="tdInputDivv" style={{display: 'flex'}}>
                 <input  checked={!!starredFiles} className="checkboxFiles" type="checkbox"  id={file.id} onClick={this.starFile.bind(this, file)} />
-                <p>hej</p>
                 </div>
                 </td>
               </tr>
@@ -199,6 +198,7 @@ starFolder = (folder) => {
             let size
             let newSize
             let i
+            console.log(favfile)
             fileName = favfile.metadata.name;
             size = favfile.metadata.size;
             i = Math.floor(Math.log(size) / Math.log(1024));
@@ -221,7 +221,7 @@ starFolder = (folder) => {
             let folderName;
             const type = favfolder['.tag'];
             let folderThumbnail
-    
+            console.log(favfolder)
             if (type === 'folder') {
               folderThumbnail = folderImg;
             folderName = favfolder.name;
