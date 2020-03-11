@@ -377,7 +377,8 @@ starFolder = (folder) => {
                   {favFolders}
 
                 <h2 style={{ marginTop: '10%' }} >Favorite Files!</h2>
-                  {favFiles}
+                  {favFiles} 
+                  <p>ja</p>
               </tbody>
               </table>
           </div>
