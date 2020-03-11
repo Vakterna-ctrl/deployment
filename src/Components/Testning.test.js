@@ -10,8 +10,9 @@ configure ({adapter: new Adapter()})
 
 describe('<RightNav />', () => {
     it('renders four <li> Elements', () => {
-      const wrapper = shallow(<RightNav />);
-      expect(wrapper.find('li')).to.have.lengthOf(4);
+        const wrapper = shallow(<RightNav />);
+        expect(wrapper.find('li')).to.have.lengthOf(4);
+
     });
 });
 
@@ -23,3 +24,4 @@ describe('<Header />', () => {
       value: 'Change function' }
    });
   });});
+
