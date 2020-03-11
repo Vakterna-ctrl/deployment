@@ -66,7 +66,7 @@ class DropdownOptions extends PureComponent{
      closeRename={tag === 'folder' ? this.closeRenameFolder : this.closeRenameFiles}
      hideRename = {this.hideRename}
      />
-
+     
   : null}
 
   </div>
