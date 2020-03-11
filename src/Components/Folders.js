@@ -268,7 +268,7 @@ starFolder = (folder) => {
             return (
               <tr>
                 <td>
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex'}}>
                 <img src={folderThumbnail} style={{ height: '42px', width: '42px' }} alt=""/>
 
                 <Link to={`/main${folder.path_display}`}>
@@ -292,6 +292,7 @@ starFolder = (folder) => {
                         copy={this.props.copy}
                       />
                     </td>
+                    
                 </div>
                 <div className="tdInputDiv" style={{display: 'flex'}}>
                     <input checked={!!starredFolders} className="checkbox" type="checkbox"  id={folder.id} onClick={this.starFolder.bind(this, folder)} />

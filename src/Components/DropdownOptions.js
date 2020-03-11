@@ -79,6 +79,7 @@ class DropdownOptions extends PureComponent{
      closeRename={tag === 'folder' ? this.closeRenameFolder : this.closeRenameFiles}
      hideRename = {this.hideRename}
      />
+
   : null}
   {copyButtonClicked ?
     <CopyWindow closeCopyWindow={this.closeCopyWindow} makeCopyInSameFolder={this.makeCopyInSameFolder} copy={copy} path_display={path_display}/>
