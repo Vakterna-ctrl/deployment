@@ -37,7 +37,7 @@ class Main extends Component {
 
 
     copy = (original_path, your_path) =>{
-     
+    
       this.dbx.filesCopy({
         from_path: original_path,
         to_path: your_path,
@@ -122,9 +122,9 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    let search
     
-    this.dbx.filesSearch({ path: '' , query: "/"})
+    
+    this.dbx.filesSearch({ path: '' , query: e.target.value})
     .then(res => {
       console.log(res)
       let entries = res.matches.map(x => x.metadata);
