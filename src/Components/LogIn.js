@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 class LogIn extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             LoginDropBox: '',
             accessToken: false,
@@ -32,7 +32,8 @@ class LogIn extends Component {
     }
 
     LogIn = () => {
-        let CLIENT_ID = 'not5bhasvg2jy9d';
+
+        let CLIENT_ID = '36rhe8urwdavjdu';
 
         let dbx = new Dropbox({ clientId: CLIENT_ID });
         let LocalHost = 'http://localhost:3000/auth';

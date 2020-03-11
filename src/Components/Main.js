@@ -18,8 +18,7 @@ class Main extends Component {
         this.state = {
           folders: [],
           files: [],
-          folderRename: '',
-          fileRename: '',
+          changes: false,
         }
         this.renameRef = React.createRef();
     }
@@ -30,39 +29,20 @@ class Main extends Component {
       this.setState({file: newFile})
     }
 
-    updateFolderName = e => {
-      this.setState({ folderRename: e.target.value });
-    }
-
-    updateFileName = e => {
-      this.setState({ fileRename: e.target.value });
-    }
-
-    // delets files and closes delete window
-    onDelete = (path_delete, tag) =>{
-      if(tag === 'folder'){
-      const{folders} = this.state
-      this.dbx.filesDelete({path: path_delete})
-      .then(response =>{
-        let newFolder = folders.filter( folder => folder.name !== response.name)
-        this.setState({folders: newFolder })
-      })
-    }else{
-      const{files} = this.state
-      this.dbx.filesDelete({path: path_delete})
-      .then(response =>{
-        let newFiles = files.filter( files => files.metadata.name !== response.name)
-        this.setState({files: newFiles })
+    copy = (original_path, your_path) =>{
+      let url;
+      if(this.props.match.params.path){
+         url = this.props.match.params.path
+      }
+      this.dbx.filesCopy({
+        from_path: original_path,
+        to_path: your_path,
+        autorename: true,
       })
     }
-  }
 
     componentDidMount() {
-      this.setState({
-        // starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]")
-      });
-        // let log = JSON.parse(window.localStorage.getItem("favorites"));
-
+      
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       let path = ""
       if(this.props.match.params){
@@ -85,8 +65,18 @@ class Main extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-      if (prevState.folders === this.state.folders && prevState.files === this.state.files) {
-      this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
+      if (this.state.changes || this.props.match.params.path !== prevProps.match.params.path) {
+        console.log('lol')
+
+        let path = ""
+        if(this.props.match.params.path){
+          path = `/${this.props.match.params.path}`
+        }
+        this.dbx.filesListFolder({ path: path })
+        .then((resFolder) => {
+
+          this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
+          .then(response => this.setState({changes: true}))
 
       let path = this.props.location.pathname;
       path = path.slice(5);
@@ -102,6 +92,7 @@ class Main extends Component {
       .then((res) => {
         this.setState({ files: res.entries });
       });
+   })
   }
 }
 
@@ -123,46 +114,7 @@ class Main extends Component {
         this.setState({ files: res.entries });
       });
   }
-  renameFolders = (path, id) => {
-    const newName = this.state.folderRename;
 
-    this.dbx.filesMoveV2({
-      "from_path": path,
-      "to_path": `/${newName}`,
-    })
-    .then(res => {
-      const newFolders = [...this.state.folders];
-      const idx = newFolders.findIndex(x => x.id === id);
-      newFolders[idx] = res.metadata;
-
-      this.setState({ folders: newFolders });
-
-    })
-  }
-
-  renameFiles = (path, id) => {
-    const newName = this.state.fileRename;
-
-    let splitPath = path.split(".")
-    let fileType = splitPath[1];
-
-    this.dbx.filesMoveV2({
-      "from_path": path,
-      "to_path": `/${newName}.${fileType}`,
-    })
-    .then(res => {
-      let tag = res[".metadata.tag"];
-      if(tag === "folder"){
-        const newFiles = [...this.state.files];
-        const idx = newFiles.findIndex(x => x.id === id);
-        newFiles[idx] = res.metadata;
-        this.setState({ files: newFiles });return null
-      }
-      else {
-        return null
-      }
-    })
-  }
     render() {
       const { folders, files, } = this.state;
         return (
@@ -171,8 +123,8 @@ class Main extends Component {
           <div className={"bigBox"}>
           <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES} path={this.props.match.params.path}/>
           <main>
-            <Folders dbx={this.dbx} files={files} renameFiles={this.renameFiles} updateFileName={this.updateFileName}
-            renameFolders={this.renameFolders} updateFolderName={this.updateFolderName} folders={folders} onDelete={this.onDelete}/>
+            <Folders dbx={this.dbx} files={files} renameFiles={this.renameFiles} updateFileName={this.updateFileName} copy={this.copy}
+            renameFolders={this.renameFolders} updateFolderName={this.updateFolderName} folders={folders} onDelete={this.onDelete}  setFileState={this.setFileState} setFolderState={this.setFolderState}/>
             <RightNav path={this.props.match.params.path} files={files} folders={folders} dbx={this.dbx} setFileState={this.setFileState} setFolderState={this.setFolderState} />
           </main>
         </div>

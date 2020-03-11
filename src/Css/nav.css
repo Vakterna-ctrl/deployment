@@ -95,7 +95,7 @@ main{
     height: 22px;
     width: 60px;
     margin-top: 10px;
-    
+
 }
 
 .searchField {
@@ -123,7 +123,7 @@ main{
 
     transform: scale(1.3);
     border-bottom-left-radius: 40px;
-    
+
 }
 
 .searchField::placeholder {
@@ -142,14 +142,18 @@ Link{
 .pathing {
     margin-left: 10px;
 }
+.pathing:hover{
+  color: grey;
 
+}
 .checkbox {
     visibility:hidden;
     font-size:30px;
     cursor:pointer;
     position: relative;
     bottom: 20px;
-    margin-left: 200px ;
+    margin-left: 230px ;
+    
 }
 
 .checkbox:before {
@@ -176,16 +180,9 @@ Link{
     content: "\2605";
  }
 
- .tdInputDiv{
-    margin-left: 980px;
-}
 
 .tdInputDivv{
-    margin-left: 1180px;
+
     position: relative;
     bottom: 20px;
 }
-
-
-
- 

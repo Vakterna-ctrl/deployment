@@ -4,6 +4,7 @@ import '../Css/icons.css'
 import '../Css/mainFiles.css'
 import '../Css/nav.css'
 import '../Css/UlItems.css'
+
 import {Link} from 'react-router-dom'
 
 class Header extends PureComponent{
@@ -49,10 +50,12 @@ class Header extends PureComponent{
     return(
       <header>
         <h1>Project X</h1>
-
+        <span className="pathing"><Link style={{color:'white'}} to={`/main`}>{"main>"}</Link></span>
         {links.map(link => {
+          let realLink = link.split('/')
+          console.log(realLink[realLink-1])
 
-          return (<span className="pathing"><Link style={{color:'white'}} to={`/main${link}`}>{link}</Link></span>)
+          return (<span className="pathing"><Link style={{color:'white'}}  to={`/main${link}`}>{`${realLink[realLink.length-1]}>`}</Link></span>)
         })}
 
 

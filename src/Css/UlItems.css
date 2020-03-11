@@ -10,6 +10,21 @@ li{
     transition-timing-function: ease-in-out;
 }
 
+.liDiv{
+    transition: width 2s;
+    font-size: 20px;
+    font-style: italic;
+    list-style-type: none;
+    text-decoration: underline;
+    transition: all 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+.liDiv:hover{
+    cursor: pointer;
+    font-size: 25px;
+}
+
 li:hover{
     cursor: pointer;
     font-size: 25px;
@@ -39,7 +54,7 @@ a, .return{
     font-size: large;
     text-decoration: underline solid black;
     transition: all 0.5s;
-    transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out; 
   }
 
 a, .return:hover{
