@@ -10,6 +10,8 @@ class Folders extends Component {
       URL: null,
       starArray: [],
       starArrayFolders: [],
+      folderRename: '',
+      fileRename: '',
     }
   }
   downloadFile = (file) => {
@@ -19,6 +21,103 @@ class Folders extends Component {
       this.setState({ URL: objURL });
     });
   }
+  updateFolderName = e => {
+    this.setState({ folderRename: e.target.value });
+  }
+
+  updateFileName = e => {
+    this.setState({ fileRename: e.target.value });
+  }
+
+  // delets files and closes delete window
+  onDelete = (path_delete, tag) =>{
+    if(tag === 'folder'){
+    const{folders} = this.props
+    this.props.dbx.filesDelete({path: path_delete})
+    .then(response =>{
+      let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders'));
+      let newFavouriteFolders = favoritesFolders.filter( favouriteFolder => favouriteFolder.id !== response.id)
+      localStorage.setItem('favoritesFolders', JSON.stringify(newFavouriteFolders))
+      let newFolder = folders.filter( folder => folder.name !== response.name)
+      this.props.setFolderState(newFolder)
+      this.setState({starArrayFolders: newFavouriteFolders})
+    })
+  }else{
+    const{files} = this.props
+    let newfavoritesFiles
+    this.props.dbx.filesDelete({path: path_delete})
+    .then(response =>{
+      let newFiles = files.filter( files => {
+        if (files['.tag'] === 'failure') {
+          return null;
+        }
+        else {
+          let favoritesFiles = JSON.parse(localStorage.getItem('favorites'));
+          newfavoritesFiles = favoritesFiles.filter( favoritesFile => favoritesFile.metadata.id !== response.id)
+          localStorage.setItem('favorites', JSON.stringify(newfavoritesFiles))
+          return files.metadata.name !== response.name;
+        }
+      })
+      this.props.setFileState(newFiles)
+      this.setState({starArray: newfavoritesFiles})
+    })
+  }
+  }
+
+  renameFolders = (path, id) => {
+    const newName = this.state.folderRename;
+    let newfavoritesFolders = []
+
+    this.props.dbx.filesMoveV2({
+      from_path: path,
+      to_path: `/${newName}`,
+    })
+    .then(res => {
+      let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders'));
+      newfavoritesFolders = favoritesFolders.map(favoritesFolder => favoritesFolder.id === res.metadata.id ? {...favoritesFolder, ...res.metadata} : favoritesFolder)
+      window.localStorage.setItem('favoritesFolders', JSON.stringify(newfavoritesFolders))
+      const newFolders = [...this.props.folders];
+      const idx = newFolders.findIndex(x => x.id === id);
+      newFolders[idx] = res.metadata;
+
+      this.props.setFolderState(newFolders)
+      this.setState({starArrayFolders: newfavoritesFolders})
+
+    })
+  }
+
+  renameFiles = (path, id) => {
+    const newName = this.state.fileRename;
+    let newfavoritesFiles = []
+    let splitPath = path.split(".")
+    let fileType = splitPath[1];
+    this.props.dbx.filesMoveV2({
+      from_path: path,
+      to_path: `/${newName}.${fileType}`,
+    })
+    .then(res => {
+      const newFiles = [...this.props.files];
+      const idx = newFiles.findIndex(x => {
+        if (x['.tag'] === 'failure') {
+          return null
+        }
+        else {
+          let favoritesFiles = JSON.parse(localStorage.getItem('favorites'));
+          if(favoritesFiles !== null){
+          newfavoritesFiles = favoritesFiles.map(favoritesFile => favoritesFile.metadata.id === res.metadata.id ? {...favoritesFile, ...res} : favoritesFile)
+          window.localStorage.setItem('favorites', JSON.stringify(newfavoritesFiles))
+        }
+          return x.metadata.id === id;
+        }
+      })
+
+      newFiles[idx] = res.metadata;
+
+      this.props.setFileState(newFiles);
+      this.setState({starArray: newfavoritesFiles})
+    })
+  }
+
 
   starFile = (file) => {
     let newStarArray;
@@ -58,11 +157,11 @@ starFolder = (folder) => {
   this.setState({
     starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]"),
     starArrayFolders: JSON.parse(window.localStorage.getItem("favoritesFolders") || "[]"),
-  });  
+  });
 }
 
     render() {
-        const{files,folders,onDelete} = this.props
+        const{files,folders} = this.props
         const{URL} = this.state
 
 
@@ -76,18 +175,21 @@ starFolder = (folder) => {
             let i
             let id
             let path
+            let starredFiles = []
 
-            console.log(this.state.starArray);
 
-            const starredFiles = this.state.starArray
-            .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
 
             if(file[".tag"] === "failure"){
               return null
             }
             else {
               if (file.metadata) {
-                
+                starredFiles = this.state.starArray
+                .find(x => file[".tag"] !== "failure" ?  x.metadata.id === file.metadata.id : null)
+                console.log(file)
+
+
+
                 fileName = file.metadata.name;
                 date_input = new Date((file.metadata.client_modified));
                 datum = new Date(date_input).toDateString();
@@ -100,10 +202,13 @@ starFolder = (folder) => {
                 path = file.metadata.path_display;
               }
               else {
+                starredFiles = this.state.starArray
+                .find(x => file[".tag"] !== "failure" ?  x.id === file.metadata.id : null)
+
                 fileName = file.name;
                 date_input = new Date((file.client_modified));
                 datum = new Date(date_input).toDateString();
-  
+
                 size = file.size;
                 i = Math.floor(Math.log(size) / Math.log(1024));
                 newSize = (size / Math.pow(1024, i)).toFixed(2) * 1 + ""+['B', 'kB', 'MB', 'GB', 'TB'][i];
@@ -127,13 +232,15 @@ starFolder = (folder) => {
 
                   <td className="dropdownList">
                     <DropdownOptions
-                      onDelete={onDelete}
+                      onDelete={this.onDelete}
                       tag={file['.tag']}
                       path={path}
                       name={fileName}
                       id={id}
-                      updateFileName={this.props.updateFileName}
-                      renameFiles={this.props.renameFiles}
+                      path_display={file.metadata.path_display}
+                      updateFileName={this.updateFileName}
+                      renameFiles={this.renameFiles}
+                      copy={this.props.copy}
                     />
                   </td>
 
@@ -174,13 +281,15 @@ starFolder = (folder) => {
 
                     <td className="dropdownList">
                       <DropdownOptions
-                        onDelete={onDelete}
+                        onDelete={this.onDelete}
                         tag={folder['.tag']}
                         path={folder.path_display}
                         name={folder.name}
                         id={folder.id}
-                        updateFolderName={this.props.updateFolderName}
-                        renameFolders={this.props.renameFolders}
+                        path_display={folder.path_display}
+                        updateFolderName={this.updateFolderName}
+                        renameFolders={this.renameFolders}
+                        copy={this.props.copy}
                       />
                     </td>
                 </div>
@@ -197,7 +306,7 @@ starFolder = (folder) => {
             console.log("test123", favfile)
 
             let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
-            
+
 
             let fileName
             let datum
@@ -230,7 +339,7 @@ starFolder = (folder) => {
             let folderName;
             const type = favfolder['.tag'];
             let folderThumbnail
-    
+
             if (type === 'folder') {
               folderThumbnail = folderImg;
             folderName = favfolder.name;
@@ -259,13 +368,13 @@ starFolder = (folder) => {
                 <tbody>
                 <h2>Folders!</h2>
                   {minaFolders}
-  
+
                 <h2 style={{ marginTop: '10%' }}>Files!</h2>
                   {minaFiler}
-  
+
                 <h2 style={{ marginTop: '10%' }} >Favorite Folders!</h2>
                   {favFolders}
-                
+
                 <h2 style={{ marginTop: '10%' }} >Favorite Files!</h2>
                   {favFiles}
               </tbody>
