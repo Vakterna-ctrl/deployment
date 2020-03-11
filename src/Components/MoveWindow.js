@@ -17,12 +17,6 @@ class MoveWindow extends PureComponent{
      console.log(current)
      this.setState({path: current })
    }
-   moveToFolder = (current, yours) =>{
-     this.dbx.moveToFolder({
-       from_path: current,
-       to_path: yours
-     })
-   } 
 
   
   componentDidMount(){
@@ -41,9 +35,24 @@ class MoveWindow extends PureComponent{
     })
   }
   }
+  
+  moveToFolder = () =>{
+    let path_display = this.props.path_display
+    let haha = ""
+    console.log(this.state.path)
+    if(this.state.path === ""){
+      path_display = path_display.split('/')
+      path_display = `/${path_display[path_display.length-1]}`
+    }
+    console.log(path_display)
 
 
-
+    this.dbx.filesMoveV2({
+      from_path: this.props.path_display,
+      to_path: `${this.state.path}${path_display}`
+    }).then(res => this.props.closeMoveWindow())
+  } 
+ 
 
   render(){
     const{folders} = this.state
@@ -53,12 +62,12 @@ class MoveWindow extends PureComponent{
       <p style={{marginBottom: '10px'}}>Where do you want to move?</p>
       <ul className="folderSelect">
         {folders.map(folder =>(
-          <li> <SelectFolder folder={folder} setPath={this.setPath}/></li>
+          <li > <SelectFolder folder={folder} setPath={this.setPath}/></li>
         ))}
 
       </ul>
       <div>
-        <button>move to this folder</button>
+        <button onClick={this.moveToFolder}>move to this folder</button>
         <button onClick={this.props.closeMoveWindow}>cancel</button>
 
       </div>

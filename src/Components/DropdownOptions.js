@@ -91,7 +91,7 @@ class DropdownOptions extends PureComponent{
   {copyButtonClicked ?
     <CopyWindow closeCopyWindow={this.closeCopyWindow} makeCopyInSameFolder={this.makeCopyInSameFolder} copy={copy} path_display={path_display}/>
      : null}
-  {moveButtonClicked ? <MoveWindow closeMoveWindow={this.closeMoveWindow}/>:null}
+  {moveButtonClicked ? <MoveWindow closeMoveWindow={this.closeMoveWindow} path_display={path_display}/>:null}
 
   </div>
   </>
