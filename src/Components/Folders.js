@@ -75,7 +75,7 @@ class Folders extends Component {
       to_path: `/${newName}`,
     })
     .then(res => {
-      let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders'));
+      let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders') || "[]");
       newfavoritesFolders = favoritesFolders.map(favoritesFolder => favoritesFolder.id === res.metadata.id ? {...favoritesFolder, ...res.metadata} : favoritesFolder)
       window.localStorage.setItem('favoritesFolders', JSON.stringify(newfavoritesFolders))
       const newFolders = [...this.props.folders];

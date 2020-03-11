@@ -20,8 +20,8 @@ describe('<Header />', () => {
   it('simulates onChange events on <input> Element', () => {
     const onChange = sinon.spy();
     const wrapper = shallow(<Header onChange={onChange} />);
-    wrapper.find('input').simulate('change', { target: {
+    expect(wrapper.find('input').simulate('change', { target: {
       value: 'Change function' }
-   });
-  });});
+    }));
+});});
 
