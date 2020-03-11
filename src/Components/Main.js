@@ -24,6 +24,8 @@ class Main extends Component {
 
           starArray: [],
 
+          searchQuery: "",
+
         }
         this.renameRef = React.createRef();
     }
@@ -93,7 +95,9 @@ class Main extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-      if (this.state.changes || this.props.match.params.path !== prevProps.match.params.path) {
+
+      console.log("TESTB", this.state.searchQuery, prevState.searchQuery);
+      if (this.state.changes || this.props.match.params.path !== prevProps.match.params.path || (this.state.searchQuery === "" && (prevState.searchQuery !== this.state.searchQuery))) {
         console.log('lol')
 
         let path = ""
@@ -113,7 +117,17 @@ class Main extends Component {
             entries: entries,
           })
           .then((res) => {
-            const files = res.entries;
+            const files = resFolder.entries
+            .filter(x => x[".tag"] !== "folder")
+            .map(x => {
+              const th = res.entries.find(y => y.metadata && y.metadata.id === x.id);
+
+              return {
+                metadata: x,
+                ".tag": "success",
+                thumbnail: th ? th.thumbnail : null,
+              }
+            });
             this.setState({ files: files, folders: resFolder.entries, changes:false });
           })
         })
@@ -122,11 +136,25 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    
+
+    let resFolder;
+
+    console.log("TESTA", e.target.value);
+
+    this.setState({ searchQuery: e.target.value });
+
+    if (e.target.value.length === 0) {
+      return;
+    }
     
     this.dbx.filesSearch({ path: '' , query: e.target.value})
     .then(res => {
+
+
+
       console.log(res)
+
+      resFolder = res;
       let entries = res.matches.map(x => x.metadata);
 
       this.setState({ folders: entries });
@@ -138,7 +166,21 @@ class Main extends Component {
       });
       })
       .then((res) => {
-        this.setState({ files: res.entries });
+
+        const files = resFolder.matches
+        .filter(x => x[".tag"] !== "folder")
+        .map(x => {
+          const th = res.entries.find(y => y.metadata && y.metadata.id === x.metadata.id);
+
+          return {
+            metadata: x.metadata,
+            ".tag": "success",
+            thumbnail: th ? th.thumbnail : null,
+          }
+        });
+
+        console.log(files);
+        this.setState({ files: files });
       });
     
     

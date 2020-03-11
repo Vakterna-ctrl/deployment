@@ -69,7 +69,7 @@ class Folders extends Component {
   renameFolders = (path, id) => {
     const newName = this.state.folderRename;
     let newfavoritesFolders = []
-
+    console.log()
     this.props.dbx.filesMoveV2({
       from_path: path,
       to_path: `/${newName}`,
@@ -84,7 +84,6 @@ class Folders extends Component {
 
       this.props.setFolderState(newFolders)
       this.setState({starArrayFolders: newfavoritesFolders})
-
     })
   }
 
