@@ -123,11 +123,10 @@ class Main extends Component {
 
   search_FOLDERS_FILES = (e) => {
     let search
-
     
-
-    this.dbx.filesSearch({ path: '' , query: e.target.value})
+    this.dbx.filesSearch({ path: '' , query: "/"})
     .then(res => {
+      console.log(res)
       let entries = res.matches.map(x => x.metadata);
 
       this.setState({ folders: entries });
@@ -141,6 +140,8 @@ class Main extends Component {
       .then((res) => {
         this.setState({ files: res.entries });
       });
+    
+    
   }
 
 
@@ -148,7 +149,7 @@ class Main extends Component {
     render() {
 
 
-      const { folders, files, } = this.state;
+      const { folders, files } = this.state;
 
         return (
           <div className="App" >
