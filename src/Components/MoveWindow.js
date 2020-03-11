@@ -38,21 +38,18 @@ class MoveWindow extends PureComponent{
   
   moveToFolder = () =>{
     let path_display = this.props.path_display
-    let haha = ""
     console.log(this.state.path)
-    if(this.state.path === ""){
       path_display = path_display.split('/')
       path_display = `/${path_display[path_display.length-1]}`
-    }
+    
     console.log(path_display)
-
 
     this.dbx.filesMoveV2({
       from_path: this.props.path_display,
       to_path: `${this.state.path}${path_display}`
     }).then(res => this.props.closeMoveWindow())
   } 
- 
+
 
   render(){
     const{folders} = this.state

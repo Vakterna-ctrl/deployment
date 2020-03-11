@@ -6,9 +6,7 @@ import folderImg from '../Img/folder-img.png';
     choosepath = () =>{
         this.props.setPath(this.props.folder.path_display)
     }
-    myPath = () =>{
-        this.props.newPath(this.folder.path_display)
-    }
+
 
 
     render() {
