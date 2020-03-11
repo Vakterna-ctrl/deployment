@@ -5,6 +5,7 @@ import LeftNav from "./LeftNav"
 import Folders from "./Folders"
 import RightNav from "./RightNav"
 import Header from './Header'
+import {Redirect} from 'react-router-dom'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -121,7 +122,11 @@ class Main extends Component {
   }
 
   search_FOLDERS_FILES = (e) => {
-    this.dbx.filesSearch({ path: '' ,query: e.target.value})
+    let search
+
+    
+
+    this.dbx.filesSearch({ path: '' , query: e.target.value})
     .then(res => {
       let entries = res.matches.map(x => x.metadata);
 
@@ -136,7 +141,6 @@ class Main extends Component {
       .then((res) => {
         this.setState({ files: res.entries });
       });
-
   }
 
 
