@@ -38,6 +38,8 @@ class Main extends Component {
         from_path: original_path,
         to_path: your_path,
         autorename: true,
+      }).then(response=>{
+        console.log(response)
       })
     }
 
@@ -119,6 +121,7 @@ class Main extends Component {
       const { folders, files, } = this.state;
         return (
           <div className="App" >
+
           <LeftNav dbx={this.dbx}/>
           <div className={"bigBox"}>
           <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES} path={this.props.match.params.path}/>
