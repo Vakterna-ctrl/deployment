@@ -315,7 +315,11 @@ starFolder = (folder) => {
             let size
             let newSize
             let i
+<<<<<<< HEAD
+            console.log(favfile)
+=======
 
+>>>>>>> 1296849d58cd02815be128d0ddf271e6037a9440
             fileName = favfile.metadata.name;
             size = favfile.metadata.size;
             i = Math.floor(Math.log(size) / Math.log(1024));
@@ -340,7 +344,11 @@ starFolder = (folder) => {
             let folderName;
             const type = favfolder['.tag'];
             let folderThumbnail
+<<<<<<< HEAD
+            console.log(favfolder)
+=======
 
+>>>>>>> 1296849d58cd02815be128d0ddf271e6037a9440
             if (type === 'folder') {
               folderThumbnail = folderImg;
             folderName = favfolder.name;

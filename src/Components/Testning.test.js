@@ -12,14 +12,16 @@ describe('<RightNav />', () => {
     it('renders four <li> Elements', () => {
         const wrapper = shallow(<RightNav />);
         expect(wrapper.find('li')).to.have.lengthOf(4);
+
     });
 });
 
 describe('<Header />', () => {
-    it('simulates onChange events on <input> Element', () => {
+  it('simulates onChange events on <input> Element', () => {
     const onChange = sinon.spy();
     const wrapper = shallow(<Header onChange={onChange} />);
     wrapper.find('input').simulate('change', { target: {
-        value: 'Change function' }
-    });
-});});
+      value: 'Change function' }
+   });
+  });});
+
