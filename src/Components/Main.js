@@ -44,6 +44,8 @@ class Main extends Component {
         from_path: original_path,
         to_path: your_path,
         autorename: true,
+      }).then(response=>{
+        console.log(response)
       })
     }
 
@@ -191,6 +193,7 @@ class Main extends Component {
 
         return (
           <div className="App" >
+          
 
           <LeftNav dbx={this.dbx}/>
         <div className={"bigBox"}>
