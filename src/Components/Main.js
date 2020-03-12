@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Dropbox } from "dropbox";
+import LogOut from './LogOut'
 import LeftNav from "./LeftNav"
 import Folders from "./Folders"
 import RightNav from "./RightNav"
 import Header from './Header'
+import {Redirect} from 'react-router-dom'
 
 import '../Css/icons.css'
 import '../Css/mainFiles.css'
@@ -17,25 +19,25 @@ class Main extends Component {
         this.state = {
           folders: [],
           files: [],
-          starArray: [],
 
           changes: false,
-          searchQuery: ""
+
+          starArray: [],
+
+          searchQuery: "",
+
         }
         this.renameRef = React.createRef();
     }
-
-    // vi skickar den som props till Folders.js som sedan hämtar data och vi sparar den data här i state
     setFolderState = (newFolder) =>{
       this.setState({folder: newFolder})
     }
-
-    // vi skickar den som props till Folders.js som sedan hämtar data och vi sparar den data här i state
     setFileState = (newFile) =>{
       this.setState({file: newFile})
     }
 
-    // funktionen kopierar filer och folders!
+
+
     copy = (original_path, your_path) =>{
       let real_path = original_path.split('/')
       real_path = `/${real_path[real_path.length-1]}`
@@ -46,11 +48,11 @@ class Main extends Component {
       })
     }
 
-    // Den renderar ut våra filer och folders
     componentDidMount() {
       this.setState({
         starArray: JSON.parse(window.localStorage.getItem("favorites") || "[]")
       });
+        let log = JSON.parse(window.localStorage.getItem("favorites"));
 
       this.dbx = new Dropbox({ accessToken: localStorage.getItem("token") });
       let path = ""
@@ -58,12 +60,14 @@ class Main extends Component {
       if(this.props.match.params.path){
         path = `/${this.props.match.params.path}`
       }
-
       this.dbx.filesListFolder({ path: path })
       .then((resFolder) => {
+        console.log(resFolder)
         this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
         .then(response => {
+          console.log('lol')
           this.setState({changes: response.changes})
+
         })
 
         const entries = resFolder.entries
@@ -88,11 +92,13 @@ class Main extends Component {
           this.setState({ files: files, folders: resFolder.entries});
         })
       })
+
     }
 
-    // den renderar våra filer och folders. Om vår url, dropbox innehåll och search funktion ändras
     componentDidUpdate(prevProps, prevState) {
+
       if (this.state.changes || this.props.match.params.path !== prevProps.match.params.path || (this.state.searchQuery === "" && (prevState.searchQuery !== this.state.searchQuery))) {
+        console.log('lol')
 
         let path = ""
         if(this.props.match.params.path){
@@ -125,12 +131,14 @@ class Main extends Component {
             this.setState({ files: files, folders: resFolder.entries, changes:false });
           })
         })
-    }
   }
 
-  // denna funktionen gör så att när vi har sökt något så renderar den ut de vi har sökt, beroende om de är filer eller folders
+  }
+
   search_FOLDERS_FILES = (e) => {
+
     let resFolder;
+    console.log("TESTA", e.target.value);
 
     this.setState({ searchQuery: e.target.value });
 
@@ -140,7 +148,7 @@ class Main extends Component {
 
     this.dbx.filesSearch({ path: '' , query: e.target.value})
     .then(res => {
-
+      console.log(res)
       resFolder = res;
       let entries = res.matches.map(x => x.metadata);
 
@@ -153,6 +161,7 @@ class Main extends Component {
       });
       })
       .then((res) => {
+
         const files = resFolder.matches
         .filter(x => x.metadata[".tag"] !== "folder")
         .map(x => {
@@ -164,16 +173,21 @@ class Main extends Component {
             thumbnail: th ? th.thumbnail : null,
           }
         });
+        console.log(files);
         this.setState({ files: files });
       });
   }
 
-  // här visas allt innehåll på sidan
+
+
     render() {
+
+
       const { folders, files } = this.state;
 
         return (
           <div className="App" >
+
           <LeftNav dbx={this.dbx}/>
         <div className={"bigBox"}>
           <Header search_FOLDERS_FILES={this.search_FOLDERS_FILES} path={this.props.match.params.path}/>
