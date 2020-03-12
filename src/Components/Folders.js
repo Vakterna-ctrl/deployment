@@ -69,10 +69,13 @@ class Folders extends Component {
   renameFolders = (path, id) => {
     const newName = this.state.folderRename;
     let newfavoritesFolders = []
-    console.log()
+    let newPath = path.split('/')
+    newPath[newPath.length-1] = newName
+    newPath = newPath.filter(path => path !== "")
+    newPath = newPath.reduce((acc,currentpath) => (acc + `/${currentpath}`),"")
     this.props.dbx.filesMoveV2({
       from_path: path,
-      to_path: `/${newName}`,
+      to_path: newPath,
     })
     .then(res => {
       let favoritesFolders = JSON.parse(localStorage.getItem('favoritesFolders') || "[]");
@@ -90,11 +93,16 @@ class Folders extends Component {
   renameFiles = (path, id) => {
     const newName = this.state.fileRename;
     let newfavoritesFiles = []
-    let splitPath = path.split(".")
-    let fileType = splitPath[1];
+    let fileType = path.split(".")
+    fileType = fileType[fileType.length-1]
+    let newPath = path.split('/')
+    newPath[newPath.length-1] = newName
+    newPath = newPath.filter(path => path !== "")
+    newPath = newPath.reduce((acc,currentpath) => (acc + `/${currentpath}`),"") + "." + fileType
+
     this.props.dbx.filesMoveV2({
       from_path: path,
-      to_path: `/${newName}.${fileType}`,
+      to_path: newPath,
     })
     .then(res => {
       const newFiles = [...this.props.files];
@@ -160,7 +168,6 @@ starFolder = (folder) => {
 }
 
     render() {
-      console.log(this.props.folders);
         const{files,folders} = this.props
         const{URL} = this.state
 
@@ -177,7 +184,6 @@ starFolder = (folder) => {
             let path
             let starredFiles = []
 
-            console.log(file);
 
 
             if(file[".tag"] === "failure"){
@@ -294,7 +300,6 @@ starFolder = (folder) => {
           })
           let favFiles = this.state.starArray.map(favfile => {
 
-            console.log("test123", favfile)
 
             let image = `data:image/jpeg;base64,${favfile.thumbnail}`;
 
@@ -366,8 +371,8 @@ starFolder = (folder) => {
                   {favFolders}
 
                 <h2 style={{ marginTop: '10%' }} >Favorite Files!</h2>
-                  {favFiles} 
-                  
+                  {favFiles}
+
               </tbody>
               </table>
           </div>
