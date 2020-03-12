@@ -4,6 +4,7 @@ import ReactDom from 'react-dom'
 import { Dropbox } from "dropbox";
 import CopyFolderList from './CopyFolderList'
 import folderImg from '../Img/folder-img.png';
+import RouterForCopyWindow from './RouterForCopyWindow'
 
 class CopyWindow extends PureComponent{
   constructor(props){
@@ -11,6 +12,7 @@ class CopyWindow extends PureComponent{
     this.state = {
       path: "",
       folders: [],
+      routing: [],
     }
   }
   clickAnotherFolder = (path_display) =>{
@@ -24,9 +26,19 @@ class CopyWindow extends PureComponent{
   copyIntoSelectedFolder = () =>{
     const{copy,closeCopyWindow,path_display} = this.props
     const{path} = this.state
-    console.log(`${path}${path_display}`)
-    copy(path_display,`${path}${path_display}`)
+    copy(path_display, path)
     closeCopyWindow()
+  }
+  goBack = () =>{
+    let path = this.state.path.split('/').filter(path => path !== "")
+    let newPath = path.reduce((acc, current, idx ) =>( idx !== path.length-1 ? acc + `/${current}` : acc + "") , "")
+    this.setState({path: newPath})
+  }
+  onClickRouting = (route) =>{
+    this.setState({path:route})
+  }
+  onStartClick = () =>{
+    this.setState({path:""})
   }
 
   componentDidMount(){
@@ -41,7 +53,11 @@ class CopyWindow extends PureComponent{
     if(prevState.path !== this.state.path){
     this.dbx.filesListFolder({path: this.state.path})
     .then(response =>{
-      this.setState({folders: response.entries.filter(object => object[".tag"] ==="folder" )})
+      let pathArray = []
+      let pathSplit = this.state.path.split('/').filter(path => path !== "").reduce((acc, current) =>{
+        pathArray.push(acc+`/${current}`)
+        return acc+`/${current}`} ,"")
+      this.setState({folders: response.entries.filter(object => object[".tag"] ==="folder"),routing: pathArray})
     })
   }
   }
@@ -49,7 +65,7 @@ class CopyWindow extends PureComponent{
 
 
   render(){
-  const{folders,path} = this.state
+  const{folders,path,routing} = this.state
   console.log(path)
   return ReactDom.createPortal(
 
@@ -57,15 +73,21 @@ class CopyWindow extends PureComponent{
   <div>
   which folder do you want to copy it too?
   </div>
+  <div className="routeDiv">
+  <span className="routing" onClick={this.onStartClick}>start></span>
+  {routing.map(route =>(
+    <RouterForCopyWindow route={route} onClickRouting={this.onClickRouting}/>
+  ))}
+  </div>
   <ul className="selectFolder">
   {folders.map(folder => (
     <CopyFolderList folder={folder} clickAnotherFolder={this.clickAnotherFolder} copy={this.props.copy}/>
-
   ))}
   </ul>
   <div>
   <button onClick={this.copyIntoCurrentFolder}>copy into current folder</button>
   <button onClick={this.copyIntoSelectedFolder}>copy into selected folder</button>
+  <button onClick={this.goBack}>Go Back</button>
   <button onClick={this.props.closeCopyWindow}>avbryt</button>
   </div>
 

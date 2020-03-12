@@ -39,10 +39,11 @@ class Main extends Component {
 
 
     copy = (original_path, your_path) =>{
-    
+      let real_path = original_path.split('/')
+      real_path = `/${real_path[real_path.length-1]}`
       this.dbx.filesCopy({
         from_path: original_path,
-        to_path: your_path,
+        to_path: `${your_path}${real_path}`,
         autorename: true,
       })
     }
@@ -65,7 +66,7 @@ class Main extends Component {
         this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
         .then(response => {
           console.log('lol')
-          this.setState({changes: true})
+          this.setState({changes: response.changes})
 
         })
 
@@ -96,7 +97,6 @@ class Main extends Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-      console.log("TESTB", this.state.searchQuery, prevState.searchQuery);
       if (this.state.changes || this.props.match.params.path !== prevProps.match.params.path || (this.state.searchQuery === "" && (prevState.searchQuery !== this.state.searchQuery))) {
         console.log('lol')
 
@@ -108,7 +108,7 @@ class Main extends Component {
         .then((resFolder) => {
 
           this.dbx.filesListFolderLongpoll({cursor: resFolder.cursor})
-          .then(response => this.setState({changes: true}))
+          .then(response => this.setState({changes: response.changes}))
 
           const entries = resFolder.entries
             .filter(x => x[".tag"] === "file")
@@ -146,7 +146,7 @@ class Main extends Component {
     if (e.target.value.length === 0) {
       return;
     }
-    
+
     this.dbx.filesSearch({ path: '' , query: e.target.value})
     .then(res => {
 
@@ -182,8 +182,8 @@ class Main extends Component {
         console.log(files);
         this.setState({ files: files });
       });
-    
-    
+
+
   }
 
 
